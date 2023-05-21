@@ -1,4 +1,5 @@
 package com.management.staff.dto.staffDto;
+import java.time.LocalDate;
 import lombok.*;
 
 @AllArgsConstructor
@@ -9,7 +10,7 @@ public class StaffDto {
     private String surname;
     private String address; 
     private int dni; 
-    private String born;
+    private LocalDate born;
     private String area;
     private String position;
 
