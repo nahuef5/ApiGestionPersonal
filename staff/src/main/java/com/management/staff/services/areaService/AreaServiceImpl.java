@@ -42,9 +42,9 @@ public class AreaServiceImpl implements AreaServiceInterface{
     }
 
     @Override
-    public MessageHandler saveStaff(short id_area, StaffDto dto) throws ResourceNotFoundException, ResourceAlreadyExistsException{
+    public MessageHandler saveStaff(short id_area, StaffDto dto) throws ResourceNotFoundException, BusinesException{
         if(staffRepository.existsByDni(dto.getDni())){
-            throw new ResourceAlreadyExistsException(MessageHandler.ALREADY_EXISTS);
+            throw new BusinesException(MessageHandler.ALREADY_EXISTS);
         }
         Area area = areaRepository.findById(id_area)
                 .orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));

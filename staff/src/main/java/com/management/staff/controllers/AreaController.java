@@ -25,7 +25,7 @@ public class AreaController{
     @PostMapping("{id_area}/")
     public ResponseEntity<MessageHandler>saveStaff
         (@PathVariable("id_area")short id_area, @Valid @RequestBody StaffDto dto)
-                throws ResourceNotFoundException, ResourceAlreadyExistsException{
+                throws ResourceNotFoundException, BusinesException{
             return ResponseEntity.status(HttpStatus.CREATED).body(service.saveStaff(id_area, dto));
     }
 }

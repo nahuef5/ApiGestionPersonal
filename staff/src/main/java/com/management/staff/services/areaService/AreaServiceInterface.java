@@ -11,7 +11,7 @@ public interface AreaServiceInterface{
     Area getAreaById(short id)throws ResourceNotFoundException;
     Area getAreaByArea(AreaEnum areaEnum)throws ResourceNotFoundException;
     //Post staff 
-    MessageHandler saveStaff(short id_area,StaffDto dto)throws ResourceNotFoundException, ResourceAlreadyExistsException;
+    MessageHandler saveStaff(short id_area,StaffDto dto)throws ResourceNotFoundException, BusinesException;
     //Update staff con todos los atributos
     MessageHandler updateStaff(String id_staff, StaffDto dto)throws ResourceNotFoundException;
     //Update staff con patch

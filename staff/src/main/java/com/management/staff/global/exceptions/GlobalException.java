@@ -7,7 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 @RestControllerAdvice
-public class GlobalException{
+public class GlobalException {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<MessageHandler>throwResourceNotFound(ResourceNotFoundException e){
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -27,11 +27,19 @@ public class GlobalException{
         return ResponseEntity.badRequest()
                 .body(new MessageHandler(Trimmer.trimBrackets(messages.toString()),HttpStatus.BAD_REQUEST));
     }
-    @ExceptionHandler(ResourceAlreadyExistsException.class)
-    public ResponseEntity<MessageHandler>throwListEmpty(ResourceAlreadyExistsException e){
+    @ExceptionHandler(BusinesException.class)
+    public ResponseEntity<MessageHandler>throwBusinesException(BusinesException e){
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(new MessageHandler(e.getMessage(), HttpStatus.CONFLICT));
     }
-    //DateTimeParseException
-    
+    @ExceptionHandler(DateTimeParseException.class)
+    public ResponseEntity<MessageHandler> handleDateTimeParseException(DateTimeParseException e){
+        String errorMessage = e.getMessage()+". The date format must be 'yyyy-MM-dd'.";
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new MessageHandler(errorMessage, HttpStatus.NOT_ACCEPTABLE));
+    }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<MessageHandler> generalException(Exception e){
+        return ResponseEntity.internalServerError()
+                .body(new MessageHandler(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR));
+    }
 }
