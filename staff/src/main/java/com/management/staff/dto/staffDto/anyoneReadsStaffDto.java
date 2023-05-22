@@ -5,10 +5,11 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class ViewStaffDto {
+public class AnyoneReadsStaffDto {
     private String name;
     private String surname;
     private LocalDate born;
+    private int dni;
     private String area;
     private String position;
 }

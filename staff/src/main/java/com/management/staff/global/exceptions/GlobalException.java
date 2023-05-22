@@ -1,8 +1,8 @@
 package com.management.staff.global.exceptions;
-import com.management.staff.global.utils.MessageHandler;
+import com.management.staff.global.utils.*;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import org.springframework.http.*;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,18 +15,23 @@ public class GlobalException{
     }
     @ExceptionHandler(ListEmptyException.class)
     public ResponseEntity<MessageHandler>throwListEmpty(ListEmptyException e){
-        return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                .body(new MessageHandler(e.getMessage(), HttpStatus.NO_CONTENT));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new MessageHandler(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>>throwValidationException(MethodArgumentNotValidException e){
-        Map<String, String> errors = new HashMap<>();
-        e.getBindingResult().getAllErrors().forEach((err)->{
-            String field = ((FieldError)err).getField();
-            String message = err.getDefaultMessage();
-            
-            errors.put(field, message);
+    public ResponseEntity<MessageHandler> validationException(MethodArgumentNotValidException e){
+        List<String> messages = new ArrayList<>();
+        e.getBindingResult().getAllErrors().forEach((err) -> {
+            messages.add(err.getDefaultMessage());
         });
-        return ResponseEntity.badRequest().body(errors);
+        return ResponseEntity.badRequest()
+                .body(new MessageHandler(Trimmer.trimBrackets(messages.toString()),HttpStatus.BAD_REQUEST));
     }
+    @ExceptionHandler(ResourceAlreadyExistsException.class)
+    public ResponseEntity<MessageHandler>throwListEmpty(ResourceAlreadyExistsException e){
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new MessageHandler(e.getMessage(), HttpStatus.CONFLICT));
+    }
+    //DateTimeParseException
+    
 }

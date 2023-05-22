@@ -1,17 +1,17 @@
 package com.management.staff.services.staffService;
 
-import com.management.staff.dto.staffDto.ViewStaffDto;
-import com.management.staff.entities.Staff;
+import com.management.staff.dto.staffDto.StaffDto;
+import com.management.staff.dto.staffDto.AnyoneReadsStaffDto;
 import com.management.staff.global.exceptions.*;
 import java.util.*;
 
 public interface StaffServiceInterface {
-    //Traera todos con sueldo incluido
-    List<Staff>getAllWithAllAttributtes()throws ListEmptyException;
+    //Traera lista con todos los empleados
+    Set<StaffDto>getListaAutenticado()throws ListEmptyException;
     //Traera la lista del dto de vista
-    Set<ViewStaffDto> getAllViewDto();
+    Set<AnyoneReadsStaffDto> getListaUniversal()throws ListEmptyException;
     //traer un staff con todos los datos
-    Staff getOneWithAllAttributes(int dni)throws ResourceNotFoundException;
+    StaffDto getIndividualAutenticado(int dni)throws ResourceNotFoundException;
     //traer un staff sin todos los datos
-    ViewStaffDto getOneWithoutSomeAttributes(int dni)throws ResourceNotFoundException;
+    AnyoneReadsStaffDto getIndividualUniversal(int dni)throws ResourceNotFoundException;
 }

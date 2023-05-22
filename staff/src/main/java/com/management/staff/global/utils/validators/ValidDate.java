@@ -3,11 +3,10 @@ import jakarta.validation.*;
 import java.lang.annotation.*;
 
 //Interfaz para generar mi validcion de fecha personalizada
-
-@Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = DateValidator.class)
 @Target({ElementType.FIELD})
-
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Constraint(validatedBy = DateValidator.class)
 public @interface ValidDate{
     int minYear() default 1958;
     int maxYear() default 2005;

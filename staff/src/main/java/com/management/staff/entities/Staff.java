@@ -1,4 +1,5 @@
 package com.management.staff.entities;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.management.staff.global.utils.validators.ValidDate;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -7,7 +8,7 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Table(name="Personal_Empresa")
+@Table(name="personal_empresa")
 @Getter
 @NoArgsConstructor
 //La idea es crear el trabajador desde el enlace del area, donde se pasara el
@@ -19,25 +20,22 @@ public class Staff{
     @Column(name = "id_staff", columnDefinition = "VARCHAR(255)")
     private String id_staff;
     @NotNull
-    @Size(min = 3, max = 10, message = "Staff's name must be between 3 and 10 characters")
     private String name;
     @NotNull
-    @Size(min = 3, max = 10, message = "Staff's surname must be between 3 and 10 characters")
     private String surname;
     @NotNull
-    @NotEmpty
-    @NotBlank
-    @Pattern(regexp="^[a-zA-Z]{1,13} [1-9]\\d{0,3}$")
     private String address;
     @NotNull
-    @Min(20000000)
-    @Digits(integer=8, fraction=0)
     private int dni;
-    //Implemento una validacion personalizada de fecha de nacimiento
-    @ValidDate
-    private LocalDate born; 
     @NotNull
-    private String area;//despues creo la clase y objeto area
+    private LocalDate born;
+    
+    @NotNull
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name="id_area")
+    private Area area;
+    
     @NotNull
     private String position;//despues creo la clase y objeto 
     @NotNull
@@ -45,7 +43,7 @@ public class Staff{
     @NotNull
     private double netSalary;
     
-    public Staff(String name, String surname, String address, int dni, LocalDate born, String area, String position) {
+    public Staff(String name, String surname, String address, int dni, LocalDate born, Area area, String position) {
         this.name = name;
         this.surname = surname;
         this.address = address;
@@ -61,7 +59,7 @@ public class Staff{
     public void setAddress(String address) {
         this.address = address;
     }
-    public void setArea(String area) {
+    public void setArea(Area area) {
         this.area = area;
     }
     public void setPosition(String position) {

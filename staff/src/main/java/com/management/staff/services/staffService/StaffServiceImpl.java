@@ -1,7 +1,9 @@
 package com.management.staff.services.staffService;
-import com.management.staff.dto.staffDto.ViewStaffDto;
+import com.management.staff.dto.staffDto.StaffDto;
+import com.management.staff.dto.staffDto.AnyoneReadsStaffDto;
 import com.management.staff.entities.Staff;
 import com.management.staff.global.exceptions.*;
+import com.management.staff.global.utils.MessageHandler;
 import com.management.staff.repository.StaffRepository;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,51 +15,113 @@ import org.springframework.transaction.annotation.Transactional;
 public class StaffServiceImpl implements StaffServiceInterface{
     @Autowired
     private StaffRepository repository;
-    private Set<ViewStaffDto> listDto= new HashSet<>();
-    private ViewStaffDto viewDto=new ViewStaffDto();
-    //Mensajes de error
-    private final String NOTFOUD="No existe ningun trabajador con ese DNI.";
-    private final String EMPTY_COLLECTION="La lista de personal esta vacia.";
     
-    //metodo para settear el objeto de vista de staff
-    private void setViewDto(int dni) throws ResourceNotFoundException{
-        Staff staff = repository.findByDni(dni).orElseThrow(()-> new ResourceNotFoundException(this.NOTFOUD));
-        this.viewDto.setName(staff.getName());
-        this.viewDto.setSurname(staff.getSurname());
-        this.viewDto.setBorn(staff.getBorn());
-        this.viewDto.setArea(staff.getArea());
-        this.viewDto.setPosition(staff.getPosition());
+        //COLECCION DE VISTA UNIVERSAL
+    private Set<AnyoneReadsStaffDto> listaUniversal= new HashSet<>();
+        //COLECCION DE VISTA AUTENTICADA
+    private Set<StaffDto> listaAutenticada=new HashSet<>();
+        //OBJETO VISTA UNIVERSAL
+    private AnyoneReadsStaffDto individual_universal=new AnyoneReadsStaffDto();
+        //OBJETO VISTA AUTENTICADA
+    private StaffDto individual_autenticado=new StaffDto();
+    
+    /*Objetos*/
+    //SETEADOR STAFF VISTA AUTENTICADA
+    private void setIndividualAutenticado(int dni) throws ResourceNotFoundException{
+        Staff staff = repository.findByDni(dni).orElseThrow(()-> new ResourceNotFoundException(MessageHandler.NOT_FOUD));
+                individual_autenticado.setName(
+                        staff.getName());
+                individual_autenticado.setSurname(
+                        staff.getSurname());
+                individual_autenticado.setAddress(
+                        staff.getAddress());
+                individual_autenticado.setDni(
+                        staff.getDni());
+                individual_autenticado.setBorn(
+                        staff.getBorn());
+                individual_autenticado.setArea(
+                        staff.getArea().getArea().name());
+                individual_autenticado.setPosition(
+                        staff.getPosition());
+                individual_autenticado.setGrossSalary(
+                        staff.getGrossSalary());
+                individual_autenticado.setNetSalary(
+                        staff.getNetSalary());
     }
-    //metodos para settear coleccion del staff de vista
-    private void setlistDto(){
+        
+        //GET AUTENTICADO
+    @Override
+    public StaffDto getIndividualAutenticado(int dni)throws ResourceNotFoundException {
+        setIndividualAutenticado(dni);
+        return individual_autenticado;
+    }
+        //SETEADOR STAFF VISTA UNIVERSAL
+    private void setIndividualUniversal(int dni) throws ResourceNotFoundException{
+        Staff staff = repository.findByDni(dni).orElseThrow(()-> 
+                new ResourceNotFoundException(MessageHandler.NOT_FOUD));
+            individual_universal.setName(
+                    staff.getName());
+            individual_universal.setSurname(
+                    staff.getSurname());
+            individual_universal.setBorn(
+                    staff.getBorn());
+            individual_universal.setDni(
+                    staff.getDni());
+                //TRAER VALOR NOMBRE DEL ENUM
+            individual_universal.setArea(
+                    staff.getArea().getArea().name());
+            individual_universal.setPosition(
+                    staff.getPosition());
+    }
+        //GET UNIVERSAL
+    @Override
+    public AnyoneReadsStaffDto getIndividualUniversal(int dni)throws ResourceNotFoundException {
+        setIndividualUniversal(dni);
+        return individual_universal;
+    }
+    
+    /*Listas*/
+    
+        //SETTEAR COLECCION STAFF DE VISTA UNIVERSAL
+    private void setListaUniversal()throws ListEmptyException{
         List<Staff>list=repository.findAll();
+        if(list.isEmpty())
+            throw new ListEmptyException(MessageHandler.EMPTY_COLLECTION);
         for(Staff stf: list){
-            ViewStaffDto dto=new ViewStaffDto(stf.getName(),stf.getSurname(), stf.getBorn(),stf.getArea(), stf.getPosition());
-            listDto.add(dto);            
+            AnyoneReadsStaffDto dto=new AnyoneReadsStaffDto(
+                    stf.getName(),stf.getSurname(), stf.getBorn(),stf.getDni(),stf.getArea().getArea().name(), stf.getPosition());
+            listaUniversal.add(dto);            
         }       
     }
+        //GET LISTA UNIVERSAL
     @Override
-    public Set<ViewStaffDto> getAllViewDto() {
-        setlistDto();
-        return listDto;
+    public Set<AnyoneReadsStaffDto> getListaUniversal() throws ListEmptyException{
+        setListaUniversal();
+        return listaUniversal;
     }
-    //metodos heredados para sobreescribir
-    @Override
-    public List<Staff> getAllWithAllAttributtes() throws ListEmptyException{
-        if(repository.findAll().isEmpty())
-            throw new ListEmptyException(this.EMPTY_COLLECTION);
-        return repository.findAll();
+        //SETTEAR COLECCION STAFF DE VISTA AUTENTICADA
+    private void setListaAutenticada()throws ListEmptyException{
+        List<Staff>list=repository.findAll();
+        if(list.isEmpty())
+            throw new ListEmptyException(MessageHandler.EMPTY_COLLECTION);
+        for(Staff stf:list){
+            StaffDto dto=new StaffDto(
+                    stf.getName(),
+                    stf.getSurname(),
+                    stf.getAddress(),
+                    stf.getDni(),
+                    stf.getBorn(),
+                    stf.getArea().getArea().name(),
+                    stf.getPosition(),
+                    stf.getGrossSalary(),
+                    stf.getNetSalary());
+            listaAutenticada.add(dto);
+        }
     }
-
+        //GET AUTENTICADO
     @Override
-    public Staff getOneWithAllAttributes(int dni)throws ResourceNotFoundException {
-        Staff staff = repository.findByDni(dni).orElseThrow(()-> new ResourceNotFoundException(this.NOTFOUD));
-        return staff;
-    }
-
-    @Override
-    public ViewStaffDto getOneWithoutSomeAttributes(int dni)throws ResourceNotFoundException {
-        setViewDto(dni);
-        return viewDto;
+    public Set<StaffDto> getListaAutenticado() throws ListEmptyException{
+        setListaAutenticada();
+        return listaAutenticada;
     }
 }

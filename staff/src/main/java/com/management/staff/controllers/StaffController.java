@@ -1,13 +1,10 @@
 package com.management.staff.controllers;
-import com.management.staff.dto.staffDto.ViewStaffDto;
-import com.management.staff.entities.Staff;
+import com.management.staff.dto.staffDto.*;
 import com.management.staff.global.exceptions.*;
-import com.management.staff.global.utils.validators.DateValidator;
 import com.management.staff.services.staffService.StaffServiceImpl;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,30 +16,25 @@ public class StaffController{
     @Autowired
     StaffServiceImpl service;
     
-    //Get con todos los atributos
+    //Get lista (autenticado)
     @GetMapping("all/")
-    public ResponseEntity<List<Staff>> getAllStaff() throws ListEmptyException{
-        return ResponseEntity.status(HttpStatus.FOUND).body(service.getAllWithAllAttributtes());
+    public ResponseEntity<Set<StaffDto>> getListaAutenticado() throws ListEmptyException{
+        return ResponseEntity.status(HttpStatus.FOUND).body(service.getListaAutenticado());
     }
-    //Get todos con algunso atributos
+    //Get ilsta (universal)
     @GetMapping("getAll/")
-    public ResponseEntity<Set<ViewStaffDto>> getAllViewStaffDto() throws ListEmptyException{
+    public ResponseEntity<Set<AnyoneReadsStaffDto>> getListaUniversal() throws ListEmptyException{
         //Set<ViewStaffDto>listDto=service.getAllViewDto();
-        return ResponseEntity.status(HttpStatus.FOUND).body(service.getAllViewDto());
+        return ResponseEntity.status(HttpStatus.FOUND).body(service.getListaUniversal());
     }
-    //Get un staff con todos los atributos
+    //Get 1 (autenticado)
     @GetMapping("staff/{dni}/")
-    public ResponseEntity<Staff> getOneStaff(@PathVariable ("dni") int dni) throws ResourceNotFoundException{
-        return ResponseEntity.status(HttpStatus.FOUND).body(service.getOneWithAllAttributes(dni));
+    public ResponseEntity<StaffDto> getIndividualAutenticado(@PathVariable ("dni") int dni) throws ResourceNotFoundException{
+        return ResponseEntity.status(HttpStatus.FOUND).body(service.getIndividualAutenticado(dni));
     }
-    //Get un staff solo con alfunos atributos
+    //Get 1 (universal)
     @GetMapping("getStaff/{dni}/")
-    public ResponseEntity<ViewStaffDto> getAllStaff(@PathVariable ("dni") int dni) throws ResourceNotFoundException  {
-        return ResponseEntity.status(HttpStatus.FOUND).body(service.getOneWithoutSomeAttributes(dni));
-    }
-    //Ejecutar actualizacion de ranfo de fecha cada 1ro de enero
-    @Scheduled(cron = "0 0 0 1 1 *") 
-    public void actualizarLimitesFecha() {
-        DateValidator.updatedLocalDate = true;
+    public ResponseEntity<AnyoneReadsStaffDto> getIndividualUniversal(@PathVariable ("dni") int dni) throws ResourceNotFoundException  {
+        return ResponseEntity.status(HttpStatus.FOUND).body(service.getIndividualUniversal(dni));
     }
 }
