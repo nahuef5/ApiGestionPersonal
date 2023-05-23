@@ -1,12 +1,13 @@
 package com.management.staff.services.areaService;
+import com.management.staff.dto.areaDto.AreaDto;
 import com.management.staff.dto.staffDto.StaffDto;
+import com.management.staff.dto.staffDto.StaffDtoPatch;
 import com.management.staff.entities.*;
 import com.management.staff.enums.AreaEnum;
 import com.management.staff.global.exceptions.*;
-import com.management.staff.global.utils.MessageHandler;
+import com.management.staff.global.utils.*;
 import com.management.staff.repository.*;
 import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,9 +18,7 @@ public class AreaServiceImpl implements AreaServiceInterface{
     @Autowired
     private AreaRepository areaRepository;
     @Autowired
-    private StaffRepository staffRepository;
-    //Mensajes de error
-    
+    private StaffRepository staffRepository;    
     
     @Override
     public List<Area> getAllAreas() throws ListEmptyException {
@@ -34,13 +33,7 @@ public class AreaServiceImpl implements AreaServiceInterface{
         Area area=areaRepository.findById(id).orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
         return area;
     }
-
-    @Override
-    public Area getAreaByArea(AreaEnum areaEnum) throws ResourceNotFoundException{
-        Area area=areaRepository.findByArea(areaEnum).orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
-        return area;
-    }
-
+    //Funciona: guarda Staff
     @Override
     public MessageHandler saveStaff(short id_area, StaffDto dto) throws ResourceNotFoundException, BusinesException{
         if(staffRepository.existsByDni(dto.getDni())){
@@ -57,21 +50,51 @@ public class AreaServiceImpl implements AreaServiceInterface{
                 area,
                 dto.getPosition());
         staffRepository.save(staff);
-        return new MessageHandler(MessageHandler.CREATED, HttpStatus.CREATED);
+        MessageHandler msg=new MessageHandler(MessageHandler.CREATED, HttpStatus.CREATED);
+        return msg;
     }
-
+    //Funciona: actualiza staff
     @Override
-    public MessageHandler updateStaff(String id_staff, StaffDto dto) throws ResourceNotFoundException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public MessageHandler updateStaff(int dni, StaffDtoPatch dto) throws ResourceNotFoundException{
+        Staff staff=staffRepository.findByDni(dni).orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
+        
+        staff.setAddress(dto.getAddress());
+        staff.setPosition(dto.getPosition());
+        
+        staffRepository.save(staff);
+        MessageHandler msg=new MessageHandler(MessageHandler.UPDATED, HttpStatus.OK);
+        return msg;
     }
-
+    //Funciona: elimina staff
     @Override
-    public MessageHandler patchStaff(String id_staff, Map<String, String> field) throws ResourceNotFoundException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public MessageHandler deleteStaff(int dni) throws ResourceNotFoundException {
+        Staff staff = staffRepository.findByDni(dni).orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
+        staffRepository.delete(staff);
+        MessageHandler msg=new MessageHandler(MessageHandler.ELIMINATED, HttpStatus.OK);
+        return msg;
     }
-
+    //Funciona: trae un staff
     @Override
-    public MessageHandler deleteStaff(String id_staff) throws ResourceNotFoundException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Staff getOneByDni(int dni){
+        Staff staff =staffRepository.findByDni(dni).orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
+        return staff;
     }
+    //
+    @Override
+    public MessageHandler updateSalaryArea(short id_area, AreaDto dto) throws ResourceNotFoundException, BusinesException {
+        int auxGrossSalary=dto.getGrossSalary();
+        int auxNetSalary=dto.getNetSalary();
+        Area area=areaRepository.findById(id_area).orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
+        area.setGrossSalary(id_area,auxGrossSalary );
+        area.setNetSalary(id_area, auxNetSalary);
+        
+        //Le asignamos cada valor a cada staff, de lo contrario no se actualizaria
+        for(Staff stf : areaRepository.findById(id_area).get().getStaff()){
+            stf.setGrossSalary(auxGrossSalary);
+            stf.setNetSalary(auxNetSalary);
+        }
+        MessageHandler msg=new MessageHandler(MessageHandler.UPDATED, HttpStatus.OK);
+        return msg;
+    }
+    
 }

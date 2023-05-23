@@ -9,7 +9,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name="personal_empresa")
-@Getter
+@Getter@Setter
 @NoArgsConstructor
 //La idea es crear el trabajador desde el enlace del area, donde se pasara el
 //puesto
@@ -37,7 +37,7 @@ public class Staff{
     private Area area;
     
     @NotNull
-    private String position;//despues creo la clase y objeto 
+    private String position; 
     @NotNull
     private double grossSalary;
     @NotNull
@@ -51,8 +51,8 @@ public class Staff{
         this.born = born;
         this.area = area;
         this.position = position;
-        this.grossSalary=900;
-        this.netSalary=1000;
+        this.grossSalary=area.getGrossSalary();
+        this.netSalary=area.getNetSalary();
     }
     //Setters Adress, Area, Position, GrossSalary, NetSalary
     //Unico atributos que se pueden modificar

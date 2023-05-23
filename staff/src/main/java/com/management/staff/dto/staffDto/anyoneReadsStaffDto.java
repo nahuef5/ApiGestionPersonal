@@ -1,7 +1,6 @@
 package com.management.staff.dto.staffDto;
 import java.time.LocalDate;
 import lombok.*;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

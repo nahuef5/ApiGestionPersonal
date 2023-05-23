@@ -3,14 +3,13 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import java.time.LocalDate;
 
-
 public class DateValidator implements ConstraintValidator<ValidDate, LocalDate>{    
     private int minYear;
     private int maxYear;
-    
+    //variable que se volvera true luego del @Scheduled
     public static boolean updatedLocalDate = false;
     
-    //Modficador de variables de año maximo y minimo
+    //Modficador de año maximo y minimo
     private void updateDateLimit(){
         LocalDate present = LocalDate.now();
         minYear = present.getYear()-65;
@@ -26,7 +25,8 @@ public class DateValidator implements ConstraintValidator<ValidDate, LocalDate>{
     public boolean isValid(LocalDate localDate, ConstraintValidatorContext context) {
         if(localDate == null)
             return false;
-        //Si se cumple el año volvemos false la varible statica
+        //Si se cumple el año usamos metodo actualizador de min y max
+        //y volvemos false la varible updatedLocalDate
         if(updatedLocalDate){
             updateDateLimit();
             updatedLocalDate=false;

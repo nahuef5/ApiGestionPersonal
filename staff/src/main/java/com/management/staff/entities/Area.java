@@ -5,10 +5,11 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import java.util.*;
 import lombok.*;
-
+//Esta entidad solo podra crearse desde los enums. No se podran eliminar o crear
+//solo se podran actualizar los sueldos
 @Entity
 @Table(name="areas_empresa")
-@Getter @Setter
+@Getter
 @NoArgsConstructor
 public class Area {
     @Id
@@ -23,11 +24,21 @@ public class Area {
     private Set<Staff> staff=new HashSet<>();
     
     private int grossSalary;
-    private int netSalry;
+    private int netSalary;
 
     public Area(AreaEnum area) {
         this.area = area;
-        this.grossSalary = 5000;
-        this.netSalry = 6000;
+        this.grossSalary = 1;
+        this.netSalary = 1;
+    }
+    public void setGrossSalary(int id_area,int grossSalary) {
+        this.grossSalary = grossSalary;
+    }
+    public void setNetSalary(int id_area,int netSalry) {
+        this.netSalary = netSalry;
+    }
+
+    public void setStaff(Set<Staff> staff) {
+        this.staff = staff;
     }
 }
