@@ -3,7 +3,6 @@ import com.management.staff.dto.areaDto.AreaDto;
 import com.management.staff.dto.staffDto.StaffDto;
 import com.management.staff.dto.staffDto.StaffDtoPatch;
 import com.management.staff.entities.*;
-import com.management.staff.enums.AreaEnum;
 import com.management.staff.global.exceptions.*;
 import com.management.staff.global.utils.*;
 import com.management.staff.repository.*;

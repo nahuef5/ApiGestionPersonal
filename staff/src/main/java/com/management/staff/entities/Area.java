@@ -31,14 +31,10 @@ public class Area {
         this.grossSalary = 1;
         this.netSalary = 1;
     }
-    public void setGrossSalary(int id_area,int grossSalary) {
+    public void setGrossSalary(short id_area,int grossSalary) {
         this.grossSalary = grossSalary;
     }
-    public void setNetSalary(int id_area,int netSalry) {
+    public void setNetSalary(short id_area,int netSalry) {
         this.netSalary = netSalry;
-    }
-
-    public void setStaff(Set<Staff> staff) {
-        this.staff = staff;
     }
 }
