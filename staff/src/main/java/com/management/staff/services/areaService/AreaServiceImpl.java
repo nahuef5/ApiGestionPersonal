@@ -1,7 +1,5 @@
 package com.management.staff.services.areaService;
-import com.management.staff.dto.areaDto.AreaDto;
-import com.management.staff.dto.staffDto.StaffDto;
-import com.management.staff.dto.staffDto.StaffDtoPatch;
+import com.management.staff.dto.staffDto.*;
 import com.management.staff.entities.*;
 import com.management.staff.global.exceptions.*;
 import com.management.staff.global.utils.*;
@@ -18,6 +16,10 @@ public class AreaServiceImpl implements AreaServiceInterface{
     private AreaRepository areaRepository;
     @Autowired
     private StaffRepository staffRepository;    
+    @Autowired
+    private PositionRepository positionRepository;
+    @Autowired
+    
     
     @Override
     public List<Area> getAllAreas() throws ListEmptyException {
@@ -32,35 +34,53 @@ public class AreaServiceImpl implements AreaServiceInterface{
         Area area=areaRepository.findById(id).orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
         return area;
     }
-    //Funciona: guarda Staff
+    //
     @Override
-    public MessageHandler saveStaff(short id_area, StaffDto dto) throws ResourceNotFoundException, BusinesException{
-        if(staffRepository.existsByDni(dto.getDni())){
+    public MessageHandler saveNewStaff(short id_area,short id_position,StaffDto dto)throws ResourceNotFoundException, BusinesException{
+        if(staffRepository.existsByDni(dto.getDni()))
             throw new BusinesException(MessageHandler.ALREADY_EXISTS);
-        }
-        Area area = areaRepository.findById(id_area)
-                .orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
-        Staff staff=new Staff(
+        Area area = areaRepository.findById(id_area).orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
+        Position position= positionRepository.findById(id_position).orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
+        Staff staff= new Staff(
                 dto.getName(),
                 dto.getSurname(),
                 dto.getAddress(),
                 dto.getDni(),
                 dto.getBorn(),
                 area,
-                dto.getPosition());
+                position);
         staffRepository.save(staff);
-        MessageHandler msg=new MessageHandler(MessageHandler.CREATED, HttpStatus.CREATED);
+        MessageHandler msg = new MessageHandler(MessageHandler.CREATED, HttpStatus.CREATED);
         return msg;
     }
-    //Funciona: actualiza staff
+    //
     @Override
-    public MessageHandler updateStaff(int dni, StaffDtoPatch dto) throws ResourceNotFoundException{
+    public MessageHandler updateAddressOfStaff(int dni, StaffAddressDto dto) throws ResourceNotFoundException{
         Staff staff=staffRepository.findByDni(dni).orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
-        
-        staff.setAddress(dto.getAddress());
-        staff.setPosition(dto.getPosition());
-        
+        staff.setAddress(dto.getAddress());        
         staffRepository.save(staff);
+        MessageHandler msg=new MessageHandler(MessageHandler.UPDATED, HttpStatus.OK);
+        return msg;
+    }
+    //
+    @Override
+    public MessageHandler updatePositionOfStaff(int dni,short id_position, StaffDtoAcenso dto) throws ResourceNotFoundException{
+        Staff staff=staffRepository.findByDni(dni).orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
+        Position position= positionRepository.findById(id_position).get();
+        if(staff.getPosition()!= position){
+            throw new BusinesException("Flayaste ese no es su puesto segun ese id");
+        }
+        //debemos remover el staff de la lista anterior del puesto pasando su id
+        position.getStaff().remove(staff);
+        
+        //obtenemos la posicion del id dto
+        Position updateByDto=positionRepository.findById(dto.getId_position()).get();
+        //a staff le asignamos una nueva posicion
+        staff.setPosition(updateByDto);
+        staffRepository.save(staff);
+        //tenemos que asignar este staff a la lista nueva posicion
+        updateByDto.addStaff(staff);
+        
         MessageHandler msg=new MessageHandler(MessageHandler.UPDATED, HttpStatus.OK);
         return msg;
     }
@@ -68,32 +88,19 @@ public class AreaServiceImpl implements AreaServiceInterface{
     @Override
     public MessageHandler deleteStaff(int dni) throws ResourceNotFoundException {
         Staff staff = staffRepository.findByDni(dni).orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
+        //sacamos staf de la lista de position para liberar memoria
+        Position position=positionRepository.findByPosition(staff.getPosition()).get();
+        position.getStaff().remove(staff);
+        //eliminamos staff
         staffRepository.delete(staff);
+        
         MessageHandler msg=new MessageHandler(MessageHandler.ELIMINATED, HttpStatus.OK);
         return msg;
     }
-    //Funciona: trae un staff
+    //
     @Override
     public Staff getOneByDni(int dni){
         Staff staff =staffRepository.findByDni(dni).orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
         return staff;
     }
-    //
-    @Override
-    public MessageHandler updateSalaryArea(short id_area, AreaDto dto) throws ResourceNotFoundException, BusinesException {
-        int auxGrossSalary=dto.getGrossSalary();
-        int auxNetSalary=dto.getNetSalary();
-        Area area=areaRepository.findById(id_area).orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
-        area.setGrossSalary(id_area,auxGrossSalary );
-        area.setNetSalary(id_area, auxNetSalary);
-        
-        //Le asignamos cada valor a cada staff, de lo contrario no se actualizaria
-        for(Staff stf : areaRepository.findById(id_area).get().getStaff()){
-            stf.setGrossSalary(auxGrossSalary);
-            stf.setNetSalary(auxNetSalary);
-        }
-        MessageHandler msg=new MessageHandler(MessageHandler.UPDATED, HttpStatus.OK);
-        return msg;
-    }
-    
 }

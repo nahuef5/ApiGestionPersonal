@@ -1,5 +1,8 @@
 package com.management.staff.entities;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.management.staff.enums.AreaEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -11,6 +14,7 @@ import lombok.*;
 @Table(name="areas_empresa")
 @Getter
 @NoArgsConstructor
+//@JsonIdentityInfo(generator = ObjectIdGenerators.None.class)
 public class Area {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -19,22 +23,18 @@ public class Area {
     @Enumerated(EnumType.STRING)
     private AreaEnum area;
     
-    @JsonManagedReference
     @OneToMany(mappedBy="area", cascade=CascadeType.ALL, orphanRemoval=true)
+    //@JsonManagedReference
+    @JsonIgnoreProperties("areaName")
     private Set<Staff> staff=new HashSet<>();
     
-    private int grossSalary;
-    private int netSalary;
+    private float budget;
 
     public Area(AreaEnum area) {
         this.area = area;
-        this.grossSalary = 1;
-        this.netSalary = 1;
+        this.budget=1000;
     }
-    public void setGrossSalary(short id_area,int grossSalary) {
-        this.grossSalary = grossSalary;
-    }
-    public void setNetSalary(short id_area,int netSalry) {
-        this.netSalary = netSalry;
+    public void setBudget(float budget) {
+        this.budget = budget;
     }
 }

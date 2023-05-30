@@ -42,7 +42,7 @@ public class StaffServiceImpl implements StaffServiceInterface{
                 individual_autenticado.setArea(
                         staff.getArea().getArea().name());
                 individual_autenticado.setPosition(
-                        staff.getPosition());
+                        staff.getPosition().getPosition().name());
                 individual_autenticado.setGrossSalary(
                         staff.getGrossSalary());
                 individual_autenticado.setNetSalary(
@@ -71,7 +71,7 @@ public class StaffServiceImpl implements StaffServiceInterface{
             individual_universal.setArea(
                     staff.getArea().getArea().name());
             individual_universal.setPosition(
-                    staff.getPosition());
+                    staff.getPosition().getPosition().name());
     }
         //GET UNIVERSAL
     @Override
@@ -89,7 +89,7 @@ public class StaffServiceImpl implements StaffServiceInterface{
             throw new ListEmptyException(MessageHandler.EMPTY_COLLECTION);
         for(Staff stf: list){
             AnyoneReadsStaffDto dto=new AnyoneReadsStaffDto(
-                    stf.getName(),stf.getSurname(), stf.getBorn(),stf.getDni(),stf.getArea().getArea().name(), stf.getPosition());
+                    stf.getName(),stf.getSurname(), stf.getBorn(),stf.getDni(),stf.getArea().getArea().name(), stf.getPosition().toString());
             listaUniversal.add(dto);            
         }       
     }
@@ -112,7 +112,7 @@ public class StaffServiceImpl implements StaffServiceInterface{
                     stf.getDni(),
                     stf.getBorn(),
                     stf.getArea().getArea().name(),
-                    stf.getPosition(),
+                    stf.getPosition().getPosition().name(),
                     stf.getGrossSalary(),
                     stf.getNetSalary());
             listaAutenticada.add(dto);

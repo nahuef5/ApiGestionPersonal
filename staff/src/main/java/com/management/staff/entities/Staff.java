@@ -1,6 +1,8 @@
 package com.management.staff.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.management.staff.global.utils.validators.ValidDate;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
@@ -29,21 +31,40 @@ public class Staff{
     private int dni;
     @NotNull
     private LocalDate born;
-    
+
     @NotNull
-    @JsonBackReference
     @ManyToOne
     @JoinColumn(name="id_area")
+    @JsonIgnore
+    //@JsonBackReference("area")
     private Area area;
     
     @NotNull
-    private String position; 
+    @ManyToOne
+    @JoinColumn(name="id_position")
+    @JsonIgnore
+    //@JsonBackReference("position")
+    private Position position; 
+
     @NotNull
-    private double grossSalary;
+    private float grossSalary;
     @NotNull
-    private double netSalary;
+    private float netSalary;
     
-    public Staff(String name, String surname, String address, int dni, LocalDate born, Area area, String position) {
+    @JsonProperty("positionName")
+    public String getPositionName(){
+        if (position !=null)
+            return position.getPosition().name();
+        return null;
+    }
+    @JsonProperty("areaName")
+    public String getAreaName(){
+        if (area !=null)
+            return area.getArea().name();
+        return null;
+    }
+    
+    public Staff(String name, String surname, String address, int dni, LocalDate born, Area area, Position position) {
         this.name = name;
         this.surname = surname;
         this.address = address;
@@ -51,8 +72,8 @@ public class Staff{
         this.born = born;
         this.area = area;
         this.position = position;
-        this.grossSalary=area.getGrossSalary();
-        this.netSalary=area.getNetSalary();
+        this.grossSalary=position.getGrossSalary();
+        this.netSalary=position.getNetSalary();
     }
     //Setters Adress, Area, Position, GrossSalary, NetSalary
     //Unico atributos que se pueden modificar
@@ -62,13 +83,13 @@ public class Staff{
     public void setArea(Area area) {
         this.area = area;
     }
-    public void setPosition(String position) {
+    public void setPosition(Position position) {
         this.position = position;
     }
-    public void setGrossSalary(double grossSalary) {
+    public void setGrossSalary(float grossSalary) {
         this.grossSalary = grossSalary;
     }
-    public void setNetSalary(double netSalary) {
+    public void setNetSalary(float netSalary) {
         this.netSalary = netSalary;
     }
 }

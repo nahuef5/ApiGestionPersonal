@@ -1,6 +1,7 @@
 package com.management.staff.services.positionService;
 import com.management.staff.dto.positionDto.PositionDto;
 import com.management.staff.entities.Position;
+import com.management.staff.entities.Staff;
 import com.management.staff.global.exceptions.ListEmptyException;
 import com.management.staff.global.exceptions.ResourceNotFoundException;
 import com.management.staff.global.utils.MessageHandler;
@@ -15,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PositionServiceImpl implements PositionServiceInterface{
     @Autowired
     private PositionRepository positionRepository;
-    
+
     @Override
     public List<Position> getAllPositions() throws ListEmptyException {
         if(positionRepository.findAll().isEmpty())
@@ -30,9 +31,16 @@ public class PositionServiceImpl implements PositionServiceInterface{
     }
     @Override
     public MessageHandler updateSalaryByPosition(short id_position, PositionDto dto) throws ResourceNotFoundException {
+        float auxGrossSalary=dto.getGrossSalary();
+        float auxNetSalary=dto.getNetSalary();
         Position position= positionRepository.findById(id_position).orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
-        position.setGrossSalary(dto.getGrossSalary());
-        position.setNetSalary(dto.getNetSalary());
+        position.setGrossSalary(auxGrossSalary);
+        position.setNetSalary(auxNetSalary);
+        //asignamos cada valor a cada staff de la lista
+        for(Staff stf: position.getStaff()){
+            stf.setGrossSalary(auxGrossSalary);
+            stf.setNetSalary(auxNetSalary);
+        }
         MessageHandler msg= new MessageHandler(MessageHandler.UPDATED, HttpStatus.OK);
         return msg;
     }
