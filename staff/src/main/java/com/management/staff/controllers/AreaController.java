@@ -1,5 +1,4 @@
 package com.management.staff.controllers;
-import com.management.staff.dto.staffDto.StaffDto;
 import com.management.staff.dto.staffDto.*;
 import com.management.staff.entities.Area;
 import com.management.staff.global.exceptions.*;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins="http://localhost:5000/")
 public class AreaController{
     @Autowired
-    private AreaServiceImpl service;
+    AreaServiceImpl areaServiceImpl;
     
 //Ejecutar actualizacion de rango de fecha cada PRIMERO de ENERO
     @Scheduled(cron = "0 0 0 1 1 *") 
@@ -26,36 +25,32 @@ public class AreaController{
         DateValidator.updatedLocalDate = true;
     }
 //STAFF
-    //funciona
     @PostMapping("{id_area}/{id_position}/")
     public ResponseEntity<MessageHandler>saveStaff//ta
         (@PathVariable("id_area")short id_area,@PathVariable("id_position")short id_position, @Valid @RequestBody StaffDto dto)
                 throws ResourceNotFoundException, BusinesException{
-            return ResponseEntity.status(HttpStatus.CREATED).body(service.saveNewStaff(id_area, id_position, dto));
+            return ResponseEntity.status(HttpStatus.CREATED).body(areaServiceImpl.saveNewStaff(id_area, id_position, dto));
     }
-        //funciona
     @PutMapping("update/{dni}/")//ta
     public ResponseEntity<MessageHandler>updateAddressStaff(@PathVariable("dni")int dni,@Valid @RequestBody StaffAddressDto dto){
-        return ResponseEntity.ok().body(service.updateAddressOfStaff(dni, dto));
+        return ResponseEntity.ok().body(areaServiceImpl.updateAddressOfStaff(dni, dto));
     }
-    //funciona
     @PutMapping("actualizar/{dni}/removerde/{id_position}/")
     public ResponseEntity<MessageHandler>updatePositionStaff(@PathVariable("dni")int dni,@PathVariable("id_position")short id_position,@Valid @RequestBody StaffDtoAcenso dto){
-        return ResponseEntity.ok().body(service.updatePositionOfStaff(dni, id_position, dto));
+        return ResponseEntity.ok().body(areaServiceImpl.updatePositionOfStaff(dni, id_position, dto));
     }
     @DeleteMapping("delete-staff/{dni}/")
     public ResponseEntity<String>deleteRedirectStaff(@PathVariable("dni")int dni){
-        int numDni=service.getOneByDni(dni).getDni();
+        int numDni=areaServiceImpl.getOneByDni(dni).getDni();
         return ResponseEntity.status(HttpStatus.OK).body(RedirectorConfirm.url+"?dni="+numDni+"&confirm=");
     }
 //AREA
-    
     @GetMapping("allAreas/")
     public ResponseEntity<List<Area>>getAllAreas(){
-        return ResponseEntity.ok().body(service.getAllAreas());
+        return ResponseEntity.ok().body(areaServiceImpl.getAllAreas());
     }
     @GetMapping("areaById/{id_area}/")
     public ResponseEntity<Area>getAreaById(@PathVariable("id_area")short id_area){
-        return ResponseEntity.ok().body(service.getAreaById(id_area));
+        return ResponseEntity.ok().body(areaServiceImpl.getAreaById(id_area));
     }
 }

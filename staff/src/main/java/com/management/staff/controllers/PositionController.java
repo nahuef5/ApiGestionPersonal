@@ -21,7 +21,6 @@ public class PositionController {
     public ResponseEntity<Position>getOneById(@PathVariable ("id_position")short id_position){
         return ResponseEntity.status(HttpStatus.FOUND).body(service.getPositionById(id_position));
     }
-    //funciona
     @PutMapping("updateSalary/{id_position}/")
     public ResponseEntity<MessageHandler>updateSalaryByPosition(@PathVariable("id_position")short id_position,@Valid @RequestBody PositionDto dto){
         return ResponseEntity.ok(service.updateSalaryByPosition(id_position, dto));

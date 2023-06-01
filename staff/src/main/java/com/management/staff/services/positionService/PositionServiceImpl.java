@@ -1,9 +1,7 @@
 package com.management.staff.services.positionService;
 import com.management.staff.dto.positionDto.PositionDto;
-import com.management.staff.entities.Position;
-import com.management.staff.entities.Staff;
-import com.management.staff.global.exceptions.ListEmptyException;
-import com.management.staff.global.exceptions.ResourceNotFoundException;
+import com.management.staff.entities.*;
+import com.management.staff.global.exceptions.*;
 import com.management.staff.global.utils.MessageHandler;
 import com.management.staff.repository.PositionRepository;
 import java.util.List;

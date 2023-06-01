@@ -1,0 +1,25 @@
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><element><id>Relation</id><coordinates><x>260</x><y>260</y><w>150</w><h>50</h></coordinates><panel_attributes>lt=&lt;-
+m1=1
+- position</panel_attributes><additional_attributes>130;20;10;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>60</x><y>220</y><w>210</w><h>170</h></coordinates><panel_attributes>Position
+--
+- id_position: short
+- grossSalary: float
+- netSalary: float
+--
++ Position(PositionEnum){position, 
+grossSalary, netSalary}
++ Position()
++ setGrossSalary (float): void
++ setNetSalary (float): void
++ addStaff (Staff): void
++ @Getter
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>390</x><y>220</y><w>120</w><h>150</h></coordinates><panel_attributes>&lt;&lt;enum&gt;&gt;
+PositionEnum
+
+--
++ PRESIDENT
++ SHAREHOLDER
++ DIRECTOR
++ MANAGER
++ EMPLOYEE
++ SECRETARY</panel_attributes><additional_attributes></additional_attributes></element></diagram>

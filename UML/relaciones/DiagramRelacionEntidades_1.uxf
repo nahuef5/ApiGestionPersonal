@@ -1,0 +1,82 @@
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>380</x><y>240</y><w>210</w><h>340</h></coordinates><panel_attributes>Staff
+--
+- id_staff: uuid
+- name: String
+- surname: String
+- address: String
+- dni: integer
+- grossSalary: float
+- netSalary: float
+--
++ getAreaName (): String
++ getPositionName (): String
+
++ Staff()
++ Staff(String, String, String, integer, 
+LocalDate, Area, Position)
+{...grossSalary, netSalary}
+
++ setAddress(String): void
++ setPosition(Position): void
++ setGrossSalary(float): void
++ setNetSalary(float): void
++ @Getter</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>380</x><y>10</y><w>220</w><h>160</h></coordinates><panel_attributes>LocalDate
+--
+- year : integer
+- month: integer
+- day: integer
+--
++ LocalDate()
++ LocalDate(integer, integer, integer)
++ getYear(): integer
++ getMonth(): integer
++ getDay(): integer  </panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>470</x><y>160</y><w>60</w><h>100</h></coordinates><panel_attributes>lt=&lt;-
+- born
+m1=1</panel_attributes><additional_attributes>10;10;10;80</additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>250</y><w>210</w><h>120</h></coordinates><panel_attributes>Area
+--
+- id_area: short 
+- budget: float
+--
++ Area()
++ Area(AreaEnum){area, budget}
++ setBudget(float): void
++@Getter</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>110</x><y>150</y><w>60</w><h>120</h></coordinates><panel_attributes>lt=&lt;-
+- area
+m1=1</panel_attributes><additional_attributes>10;10;10;100</additional_attributes></element><element><id>UMLClass</id><coordinates><x>30</x><y>10</y><w>210</w><h>150</h></coordinates><panel_attributes>&lt;&lt;enum&gt;&gt;
+AreaEnum
+--
++ EXECUTIVE
++ ADMINISTRATION
++ ACCOUNTING
++ RRHH
++ IT
++ MARKETING
++ PRODUCTION</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>720</x><y>320</y><w>210</w><h>190</h></coordinates><panel_attributes>Position
+--
+- id_position: short
+- grossSalary: float
+- netSalary: float
+--
++ Position(PositionEnum){position, 
+grossSalary, netSalary}
++ Position()
++ setGrossSalary (float): void
++ setNetSalary (float): void
++ addStaff (Staff): void
++ @Getter
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>750</x><y>80</y><w>120</w><h>150</h></coordinates><panel_attributes>&lt;&lt;enum&gt;&gt;
+PositionEnum
+
+--
++ PRESIDENT
++ SHAREHOLDER
++ DIRECTOR
++ MANAGER
++ EMPLOYEE
++ SECRETARY</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>810</x><y>220</y><w>80</w><h>120</h></coordinates><panel_attributes>lt=&lt;-
+m1=1
+- position</panel_attributes><additional_attributes>10;10;10;100</additional_attributes></element><element><id>Relation</id><coordinates><x>200</x><y>300</y><w>200</w><h>50</h></coordinates><panel_attributes>lt=&lt;-
+- staff
+m1=1..n</panel_attributes><additional_attributes>180;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>580</x><y>380</y><w>160</w><h>50</h></coordinates><panel_attributes>lt=&lt;-
+- staff
+m1=1..n</panel_attributes><additional_attributes>10;20;140;20</additional_attributes></element></diagram>

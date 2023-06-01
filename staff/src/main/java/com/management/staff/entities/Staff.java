@@ -1,8 +1,5 @@
 package com.management.staff.entities;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
@@ -36,14 +33,12 @@ public class Staff{
     @ManyToOne
     @JoinColumn(name="id_area")
     @JsonIgnore
-    //@JsonBackReference("area")
     private Area area;
     
     @NotNull
     @ManyToOne
     @JoinColumn(name="id_position")
     @JsonIgnore
-    //@JsonBackReference("position")
     private Position position; 
 
     @NotNull
@@ -79,9 +74,6 @@ public class Staff{
     //Unico atributos que se pueden modificar
     public void setAddress(String address) {
         this.address = address;
-    }
-    public void setArea(Area area) {
-        this.area = area;
     }
     public void setPosition(Position position) {
         this.position = position;

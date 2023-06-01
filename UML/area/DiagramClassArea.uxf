@@ -1,0 +1,19 @@
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>520</x><y>130</y><w>210</w><h>150</h></coordinates><panel_attributes>&lt;&lt;enum&gt;&gt;
+AreaEnum
+--
++ EXECUTIVE
++ ADMINISTRATION
++ ACCOUNTING
++ RRHH
++ IT
++ MARKETING
++ PRODUCTION</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>100</x><y>130</y><w>280</w><h>120</h></coordinates><panel_attributes>Area
+--
+- id_area: short 
+- budget: float
+--
++ Area(AreaEnum){area, budget}
++ setBudget(float): void
++@Getter</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>370</x><y>170</y><w>170</w><h>50</h></coordinates><panel_attributes>lt=&lt;-
+- area
+m1=1</panel_attributes><additional_attributes>150;20;10;20</additional_attributes></element></diagram>

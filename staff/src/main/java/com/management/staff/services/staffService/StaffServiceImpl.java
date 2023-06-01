@@ -9,7 +9,6 @@ import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 @Service
 @Transactional
 public class StaffServiceImpl implements StaffServiceInterface{
@@ -18,8 +17,6 @@ public class StaffServiceImpl implements StaffServiceInterface{
     
         //COLECCION DE VISTA UNIVERSAL
     private Set<AnyoneReadsStaffDto> listaUniversal= new HashSet<>();
-        //COLECCION DE VISTA AUTENTICADA
-    private Set<StaffDto> listaAutenticada=new HashSet<>();
         //OBJETO VISTA UNIVERSAL
     private AnyoneReadsStaffDto individual_universal=new AnyoneReadsStaffDto();
         //OBJETO VISTA AUTENTICADA
@@ -84,12 +81,16 @@ public class StaffServiceImpl implements StaffServiceInterface{
     
         //SETTEAR COLECCION STAFF DE VISTA UNIVERSAL
     private void setListaUniversal()throws ListEmptyException{
-        List<Staff>list=repository.findAll();
-        if(list.isEmpty())
+        if(repository.findAll().isEmpty())
             throw new ListEmptyException(MessageHandler.EMPTY_COLLECTION);
-        for(Staff stf: list){
+        for(Staff stf: repository.findAll()){
             AnyoneReadsStaffDto dto=new AnyoneReadsStaffDto(
-                    stf.getName(),stf.getSurname(), stf.getBorn(),stf.getDni(),stf.getArea().getArea().name(), stf.getPosition().toString());
+                    stf.getName(),
+                    stf.getSurname(),
+                    stf.getBorn(),
+                    stf.getDni(),
+                    stf.getArea().getArea().name(), 
+                    stf.getPosition().getPosition().name());
             listaUniversal.add(dto);            
         }       
     }
@@ -99,29 +100,12 @@ public class StaffServiceImpl implements StaffServiceInterface{
         setListaUniversal();
         return listaUniversal;
     }
-        //SETTEAR COLECCION STAFF DE VISTA AUTENTICADA
-    private void setListaAutenticada()throws ListEmptyException{
-        List<Staff>list=repository.findAll();
-        if(list.isEmpty())
-            throw new ListEmptyException(MessageHandler.EMPTY_COLLECTION);
-        for(Staff stf:list){
-            StaffDto dto=new StaffDto(
-                    stf.getName(),
-                    stf.getSurname(),
-                    stf.getAddress(),
-                    stf.getDni(),
-                    stf.getBorn(),
-                    stf.getArea().getArea().name(),
-                    stf.getPosition().getPosition().name(),
-                    stf.getGrossSalary(),
-                    stf.getNetSalary());
-            listaAutenticada.add(dto);
-        }
-    }
         //GET AUTENTICADO
     @Override
-    public Set<StaffDto> getListaAutenticado() throws ListEmptyException{
-        setListaAutenticada();
-        return listaAutenticada;
+    public List<Staff> getListaAutenticado() throws ListEmptyException{
+        if(repository.findAll().isEmpty()){
+            throw new ListEmptyException(MessageHandler.EMPTY_COLLECTION);
+        }
+        return repository.findAll();
     }
 }

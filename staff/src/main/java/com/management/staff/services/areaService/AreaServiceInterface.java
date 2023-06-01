@@ -1,7 +1,6 @@
 package com.management.staff.services.areaService;
 import com.management.staff.dto.staffDto.*;
-import com.management.staff.entities.Area;
-import com.management.staff.entities.Staff;
+import com.management.staff.entities.*;
 import com.management.staff.global.exceptions.*;
 import com.management.staff.global.utils.*;
 import java.util.*;

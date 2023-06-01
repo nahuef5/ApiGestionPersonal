@@ -1,8 +1,5 @@
 package com.management.staff.entities;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import com.management.staff.enums.PositionEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -12,7 +9,6 @@ import lombok.*;
 @Table(name="puestos_empresa")
 @NoArgsConstructor
 @Getter
-//@JsonIdentityInfo(generator = ObjectIdGenerators.None.class)
 public class Position {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -22,7 +18,6 @@ public class Position {
     private PositionEnum position;
     @NotNull
     @OneToMany(mappedBy="position", cascade= CascadeType.ALL, orphanRemoval=true)
-    //@JsonManagedReference
     @JsonIgnoreProperties("positionName")
     private Set<Staff> staff= new HashSet<>();
     @NotNull
