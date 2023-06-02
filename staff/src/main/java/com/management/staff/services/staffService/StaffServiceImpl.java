@@ -4,9 +4,11 @@ import com.management.staff.dto.staffDto.AnyoneReadsStaffDto;
 import com.management.staff.entities.Staff;
 import com.management.staff.global.exceptions.*;
 import com.management.staff.global.utils.MessageHandler;
+import com.management.staff.models.QueryPageable;
 import com.management.staff.repository.StaffRepository;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 @Service
@@ -108,4 +110,14 @@ public class StaffServiceImpl implements StaffServiceInterface{
         }
         return repository.findAll();
     }
+
+    @Override
+    public Page<Staff> getAllStaffs(QueryPageable queryPageable) throws ListEmptyException {
+        Sort sort= Sort.by(Sort.Direction.fromString(queryPageable.getOrder()),
+                queryPageable.getOrderBy());
+        Pageable pageable = PageRequest.of(queryPageable.getPage(), queryPageable.getElementByPage(), sort);
+        return repository.findAll(pageable);
+    }
+
+    
 }

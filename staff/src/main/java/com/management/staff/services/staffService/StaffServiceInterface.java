@@ -2,9 +2,13 @@ package com.management.staff.services.staffService;
 import com.management.staff.dto.staffDto.*;
 import com.management.staff.entities.Staff;
 import com.management.staff.global.exceptions.*;
+import com.management.staff.models.QueryPageable;
 import java.util.*;
+import org.springframework.data.domain.*;
 
 public interface StaffServiceInterface {
+    //Pagination
+    Page<Staff> getAllStaffs(QueryPageable queryPageable)throws ListEmptyException;
     //Traera lista con todos los empleados
     List<Staff>getListaAutenticado()throws ListEmptyException;
     //Traera la lista del dto de vista

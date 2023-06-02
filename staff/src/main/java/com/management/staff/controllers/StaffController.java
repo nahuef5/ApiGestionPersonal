@@ -2,9 +2,11 @@ package com.management.staff.controllers;
 import com.management.staff.dto.staffDto.*;
 import com.management.staff.entities.Staff;
 import com.management.staff.global.exceptions.*;
+import com.management.staff.models.QueryPageable;
 import com.management.staff.services.staffService.StaffServiceImpl;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 @RestController
@@ -19,6 +21,10 @@ public class StaffController{
     @GetMapping("all/")
     public ResponseEntity<List<Staff>> getListaAutenticado() throws ListEmptyException{
         return ResponseEntity.status(HttpStatus.FOUND).body(service.getListaAutenticado());
+    }
+    @GetMapping("")
+    public ResponseEntity<Page<Staff>> getAll(QueryPageable queryPageable){
+        return ResponseEntity.ok(service.getAllStaffs(queryPageable));
     }
     //Get ilsta (universal)
     @GetMapping("getAll/")
