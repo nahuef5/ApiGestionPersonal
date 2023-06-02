@@ -1,13 +1,16 @@
 package com.management.staff.controllers;
 import com.management.staff.dto.staffDto.*;
 import com.management.staff.entities.Area;
+import com.management.staff.entities.Position;
 import com.management.staff.global.exceptions.*;
 import com.management.staff.global.utils.*;
 import com.management.staff.global.utils.validators.DateValidator;
+import com.management.staff.models.QueryPageable;
 import com.management.staff.services.areaService.AreaServiceImpl;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
@@ -52,5 +55,9 @@ public class AreaController{
     @GetMapping("areaById/{id_area}/")
     public ResponseEntity<Area>getAreaById(@PathVariable("id_area")short id_area){
         return ResponseEntity.ok().body(areaServiceImpl.getAreaById(id_area));
+    }
+    @GetMapping("")
+    public ResponseEntity<Page<Area>> getAll(QueryPageable queryPageable){
+        return ResponseEntity.ok(areaServiceImpl.getAllByPage(queryPageable));
     }
 }

@@ -3,9 +3,14 @@ import com.management.staff.dto.staffDto.*;
 import com.management.staff.entities.*;
 import com.management.staff.global.exceptions.*;
 import com.management.staff.global.utils.*;
+import com.management.staff.models.QueryPageable;
 import com.management.staff.repository.*;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -104,5 +109,13 @@ public class AreaServiceImpl implements AreaServiceInterface{
     public Staff getOneByDni(int dni){
         Staff staff =staffRepository.findByDni(dni).orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
         return staff;
+    }
+
+    @Override
+    public Page<Area> getAllByPage(QueryPageable queryPageable) throws ListEmptyException {
+        Sort sort= Sort.by(Sort.Direction.fromString(queryPageable.getOrder()),
+                queryPageable.getOrderBy());
+        Pageable pageable = PageRequest.of(queryPageable.getPage(), queryPageable.getElementByPage(), sort);
+        return areaRepository.findAll(pageable);
     }
 }

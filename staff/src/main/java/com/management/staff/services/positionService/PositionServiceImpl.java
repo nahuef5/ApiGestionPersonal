@@ -3,9 +3,14 @@ import com.management.staff.dto.positionDto.PositionDto;
 import com.management.staff.entities.*;
 import com.management.staff.global.exceptions.*;
 import com.management.staff.global.utils.MessageHandler;
+import com.management.staff.models.QueryPageable;
 import com.management.staff.repository.PositionRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,5 +46,13 @@ public class PositionServiceImpl implements PositionServiceInterface{
         }
         MessageHandler msg= new MessageHandler(MessageHandler.UPDATED, HttpStatus.OK);
         return msg;
+    }
+
+    @Override
+    public Page<Position> getAllByPage(QueryPageable queryPageable) throws ListEmptyException {
+        Sort sort= Sort.by(Sort.Direction.fromString(queryPageable.getOrder()),
+                queryPageable.getOrderBy());
+        Pageable pageable = PageRequest.of(queryPageable.getPage(), queryPageable.getElementByPage(), sort);
+        return positionRepository.findAll(pageable);
     }
 }
