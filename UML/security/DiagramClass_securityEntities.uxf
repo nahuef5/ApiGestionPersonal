@@ -1,0 +1,31 @@
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>590</x><y>80</y><w>210</w><h>190</h></coordinates><panel_attributes>Usuario
+--
+- dni: Integer
+- email: String
+- password: String
+--
++ Usuario()
++ Usuario(Integer, String, String)
++ getDni(): Integer
++ getEmail: String
++ getPassword: String
++ getRoles(): List
++ setEmail(String): void
++ setPassword(String): void
++ setRoles(List):void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>270</x><y>100</y><w>210</w><h>120</h></coordinates><panel_attributes>Role
+--
+-id: Short
+--
++ Role()
++ Role(RoleEnum)
+--
++getRole(): RoleEnum</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>40</x><y>130</y><w>140</w><h>90</h></coordinates><panel_attributes>&lt;&lt;enum&gt;&gt;
+RoleEnum
+--
++ ROLE_ADMIN
++ ROLE_ADMINTRAINEE
++ ROLE_USUARIO</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>170</x><y>150</y><w>120</w><h>50</h></coordinates><panel_attributes>lt=&lt;-
+m1= 1
+- role</panel_attributes><additional_attributes>10;20;100;20</additional_attributes></element><element><id>Relation</id><coordinates><x>470</x><y>140</y><w>140</w><h>50</h></coordinates><panel_attributes>lt=&lt;-
+m1=1..*
+- roles</panel_attributes><additional_attributes>10;20;120;20</additional_attributes></element></diagram>

@@ -8,13 +8,13 @@ public class MessageHandler {
     private String message;
     private HttpStatus status;
     //Mensajes de error
-    public static final String NOT_FOUD="There is no such resource, please try another identifier.";
-    public static final String EMPTY_COLLECTION="The list of the resource you want to read is momentarily empty.";
-    public static final String ALREADY_EXISTS="A resource with that identifier already exists.";
+    public static final String NOT_FOUD="No existe ese recurso.";
+    public static final String EMPTY_COLLECTION="La lista de recursos se encuentra vacía.";
+    public static final String ALREADY_EXISTS="Ya existe un recurso con ese dni, ese mail o ese nombre de usuario.";
     //Mensajes de exito
-    public static final String CREATED="Resource has been successfully created";
-    public static final String UPDATED="Resource has been successfully updated";
-    public static final String ELIMINATED="Resource has been successfully eliminated";
-    public static final String NOT_REMOVED="The resource hasn´t been removed";
+    public static final String CREATED="Recurso creado exitosamente.";
+    public static final String UPDATED="Recurso actulizado correctamente.";
+    public static final String ELIMINATED="Recurso eliminado correctamente.";
+    public static final String NOT_REMOVED="El recurso no ha sido eliminado.";
     
 }

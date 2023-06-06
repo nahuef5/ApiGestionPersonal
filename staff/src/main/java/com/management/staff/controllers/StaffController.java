@@ -8,6 +8,7 @@ import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/onlystaff/")
@@ -18,10 +19,12 @@ public class StaffController{
     @Autowired
     StaffServiceImpl service;
     //Get lista (autenticado)
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_ADMINTRAINEE', 'ROLE_USUARIO')")
     @GetMapping("all/")
     public ResponseEntity<List<Staff>> getListaAutenticado() throws ListEmptyException{
         return ResponseEntity.status(HttpStatus.FOUND).body(service.getListaAutenticado());
     }
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_ADMINTRAINEE', 'ROLE_USUARIO')")
     @GetMapping("")
     public ResponseEntity<Page<Staff>> getAll(QueryPageable queryPageable){
         return ResponseEntity.ok(service.getAllStaffs(queryPageable));
@@ -33,6 +36,7 @@ public class StaffController{
         return ResponseEntity.status(HttpStatus.FOUND).body(service.getListaUniversal());
     }
     //Get 1 (autenticado)
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_ADMINTRAINEE', 'ROLE_USUARIO')")
     @GetMapping("staff/{dni}/")
     public ResponseEntity<StaffDto> getIndividualAutenticado(@PathVariable ("dni") int dni) throws ResourceNotFoundException{
         return ResponseEntity.status(HttpStatus.FOUND).body(service.getIndividualAutenticado(dni));

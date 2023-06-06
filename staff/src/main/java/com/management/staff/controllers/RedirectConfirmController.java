@@ -3,13 +3,14 @@ import com.management.staff.global.utils.*;
 import com.management.staff.services.areaService.AreaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/confirm/delete-resource/")
 public class RedirectConfirmController {
     @Autowired
     private AreaServiceImpl service;
-    
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping()
     public ResponseEntity<MessageHandler> confirmDeleteStaff(
             @RequestParam("dni")int dni,

@@ -72,7 +72,7 @@ public class AreaServiceImpl implements AreaServiceInterface{
         Staff staff=staffRepository.findByDni(dni).orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
         Position position= positionRepository.findById(id_position).get();
         if(staff.getPosition()!= position){
-            throw new BusinesException("That position does not correspond to that staff.");
+            throw new BusinesException("Ese puesto no corresponde a ese personal.");
         }
         //debemos remover el staff de la lista anterior del puesto pasando su id
         position.getStaff().remove(staff);
