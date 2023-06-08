@@ -45,6 +45,11 @@ public class JwtProvider{
                 .compact();
     }
     public String generateRefreshToken(JwtToken token) throws ParseException{
+        try {
+            Jwts.parserBuilder().setSigningKey(getKey(jwtSecret)).build().parseClaimsJws(token.getToken());
+        }
+        catch(ExpiredJwtException e){
+            
         JWT jwt = JWTParser.parse(token.getToken());
         JWTClaimsSet claims = jwt.getJWTClaimsSet();
         String username =claims.getSubject();
@@ -62,6 +67,8 @@ public class JwtProvider{
                 .claim("dni", dni)
                 .claim("email", email)
                 .compact();
+        }
+        return null;
     }
     //obtenemos el username desde el token
     public String getUsernameFromToken(String token){
