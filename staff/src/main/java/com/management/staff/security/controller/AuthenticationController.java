@@ -5,6 +5,7 @@ import com.management.staff.security.entities.Usuario;
 import com.management.staff.security.services.userService.UsuarioService;
 import com.management.staff.security.utils.JwtToken;
 import jakarta.validation.Valid;
+import java.text.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,5 +32,9 @@ public class AuthenticationController{
     @PostMapping("/login")
     public ResponseEntity<JwtToken> login(@Valid @RequestBody LoginUserDto dto){
         return ResponseEntity.ok(usuarioService.loginUser(dto));
+    }
+    @PostMapping("/refresh-token")
+    public JwtToken refreshToken(@RequestBody JwtToken token) throws ParseException{
+        return usuarioService.getRefreshToken(token);
     }
 }

@@ -12,6 +12,7 @@ import com.management.staff.security.repository.UsuarioRepository;
 import com.management.staff.security.services.CreateUserInterface;
 import com.management.staff.security.services.roleService.RoleService;
 import com.management.staff.security.utils.JwtToken;
+import java.text.ParseException;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.*;
@@ -38,6 +39,7 @@ public class UsuarioService implements CreateUserInterface{
 
     private boolean existsUser(NewUsuarioDto dto){
         return usuarioRepository.existsByDni(dto.getDni()) ||
+               usuarioRepository.existsByUsername(dto.getUsername())||
                usuarioRepository.existsByEmail(dto.getEmail());
     }
     //METHODS CREATE
@@ -54,6 +56,7 @@ public class UsuarioService implements CreateUserInterface{
         Usuario user=new Usuario(
                                 dto.getDni(),
                                 dto.getEmail(),
+                                dto.getUsername(),
                                 passwordEncode);
         List<Role> roles = new ArrayList<>();
         roles.add(roleService.getRoleByName(RoleEnum.ROLE_USUARIO).get());
@@ -73,6 +76,7 @@ public class UsuarioService implements CreateUserInterface{
         Usuario user=new Usuario(
                                 dto.getDni(),
                                 dto.getEmail(),
+                                dto.getUsername(),
                                 passwordEncode);
         List<Role> roles = new ArrayList<>();
         roles.add(roleService.getRoleByName(RoleEnum.ROLE_USUARIO).get());
@@ -91,6 +95,7 @@ public class UsuarioService implements CreateUserInterface{
         Usuario user=new Usuario(
                                 dto.getDni(),
                                 dto.getEmail(),
+                                dto.getUsername(),
                                 passwordEncode);
         
         List<Role> roles = new ArrayList<>();
@@ -100,12 +105,18 @@ public class UsuarioService implements CreateUserInterface{
     }
     //LOGIN
     public JwtToken loginUser(LoginUserDto dto){
+        
         Authentication authentication=authenticationManager.authenticate(
                                     new UsernamePasswordAuthenticationToken(
-                                    dto.getEmail(),
+                                    dto.getUsername(),
                                     dto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtProvider.generateToken(authentication);
         return new JwtToken(token);
+    }
+    public JwtToken getRefreshToken(JwtToken jwtToken) throws ParseException{
+        String token=jwtProvider.generateRefreshToken(jwtToken);
+        JwtToken jwt= new JwtToken(token);
+        return jwt;
     }
 }

@@ -15,6 +15,9 @@ public class Usuario {
     @NotNull
     @Column(unique=true)
     private String email;
+    @Column(unique=true)
+    @NotNull
+    private String username;
     @NotNull
     private String password;
     @NotNull
@@ -26,9 +29,10 @@ public class Usuario {
     )
     private List<Role> roles= new ArrayList<>();
 
-    public Usuario(int dni, String email, String password) {
+    public Usuario(int dni, String email,String username, String password) {
         this.dni = dni;
         this.email = email;
+        this.username=username;
         this.password = password;
     }
 }

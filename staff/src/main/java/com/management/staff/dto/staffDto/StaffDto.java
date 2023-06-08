@@ -13,13 +13,13 @@ import lombok.*;
 @NoArgsConstructor
 @Getter @Setter
 public class StaffDto{
-    @Size(min = 3, max = 10, message = "Staff's name must be between 3 and 10 characters")
+    @Size(min = 3, max = 15, message = "El nombre del personal debe tener como minimo 3 caracteres y maximo 15.")
     private String name;
-    @Size(min = 3, max = 10, message = "Staff's surname must be between 3 and 10 characters")
+    @Size(min = 3, max = 10, message = "El apellido del personal debe tener como minimo 3 caracteres y maximo 15.")
     private String surname;
     @NotBlank
     @NotEmpty
-    @Pattern(regexp="^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{1,25}( [0-9]{1,5})?$", message="It must contain at least one word and a numbering.")
+    @Pattern(regexp="^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{1,25}( [0-9]{1,5})?$")
     private String address;
     @Min(20000000)
     @Digits(integer=8, fraction=0)

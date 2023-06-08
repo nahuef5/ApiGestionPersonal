@@ -4,7 +4,7 @@ import lombok.*;
 @Getter @Setter
 public class LoginUserDto{
     @NotBlank
-    private String email;
+    private String username;
     @NotBlank
     private String password;
 }

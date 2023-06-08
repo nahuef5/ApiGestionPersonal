@@ -10,6 +10,8 @@ public class NewUsuarioDto {
     private int dni;
     @Email
     private String email;
+    @Size(min = 6, max = 20)
+    private String username;
     //Validacion creada
     @PasswordValid
     private String password;

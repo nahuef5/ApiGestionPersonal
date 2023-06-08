@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class UserDetailsImpl implements UserDetails{
     private int dni;
     private String email;
+    private String username;
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
     private boolean expired=false;
@@ -17,9 +18,10 @@ public class UserDetailsImpl implements UserDetails{
     private boolean credentialsExpired=false;
     private boolean disabled=false;
     //Constructor
-    public UserDetailsImpl(int dni, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(int dni, String email, String username, String password, Collection<? extends GrantedAuthority> authorities) {
         this.dni = dni;
         this.email = email;
+        this.username=username;
         this.password = password;
         this.authorities = authorities;
     }
@@ -34,8 +36,10 @@ public class UserDetailsImpl implements UserDetails{
                 rol.getRole().name())).collect(Collectors.toList()
                 );
         
-        return new UserDetailsImpl(user.getDni(),
+        return new UserDetailsImpl(
+                user.getDni(),
                 user.getEmail(),
+                user.getUsername(),
                 user.getPassword(),
                 authorities
                 );
@@ -48,9 +52,12 @@ public class UserDetailsImpl implements UserDetails{
     public String getPassword() {
         return password;
     }
+    public String getEmail(){
+        return email;
+    }
     @Override
     public String getUsername() {
-        return email;
+        return username;
     }
     public int getDni() {
         return dni;
