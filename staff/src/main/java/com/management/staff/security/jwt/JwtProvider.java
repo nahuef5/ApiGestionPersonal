@@ -38,7 +38,7 @@ public class JwtProvider{
                 .signWith(getKey(jwtSecret))
                 .setSubject(userDetailsImpl.getUsername())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(new Date().getTime()+jwtExpiration))
+                .setExpiration(new Date(new Date().getTime()+jwtExpiration*10000))
                 .claim("roles", roles)
                 .claim("dni", userDetailsImpl.getDni())
                 .claim("email", userDetailsImpl.getEmail())
@@ -57,7 +57,7 @@ public class JwtProvider{
                 .signWith(getKey(jwtSecret))
                 .setSubject(username)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(new Date().getTime()+jwtExpiration))
+                .setExpiration(new Date(new Date().getTime()+jwtExpiration*10000))
                 .claim("roles", roles)
                 .claim("dni", dni)
                 .claim("email", email)
@@ -73,7 +73,7 @@ public class JwtProvider{
                 .getSubject();
     }
     //validamos el token
-    public boolean isValidToken(String token){
+    public boolean isValidToken(String token) throws Exception{
         try{
             Jwts.parserBuilder()
                     .setSigningKey(getKey(jwtSecret))
@@ -81,8 +81,21 @@ public class JwtProvider{
                     .parseClaimsJws(token);
             return true;
         }
-        catch (MalformedJwtException | UnsupportedJwtException | ExpiredJwtException | IllegalArgumentException | SignatureException  e)
-        {}
-        return false;
+        
+        catch(MalformedJwtException e){
+            throw new MalformedJwtException("Token mal formado: ",e);
+        }
+        catch(UnsupportedJwtException e){
+            throw new UnsupportedJwtException("Token no soportado: ",e);
+        }
+        catch(ExpiredJwtException e){
+            throw new Exception("Token no soportado: ",e);
+        }
+        catch(IllegalArgumentException e){
+            throw new IllegalArgumentException("Argumentos invalidos: ",e);
+        }
+        catch(SignatureException e){
+            throw new SignatureException("Firma invalida: ",e);
+        }
     }
 }

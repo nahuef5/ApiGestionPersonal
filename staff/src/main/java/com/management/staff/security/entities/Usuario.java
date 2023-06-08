@@ -20,6 +20,7 @@ public class Usuario {
     private String username;
     @NotNull
     private String password;
+    private String forgottenPassword;
     @NotNull
     @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(

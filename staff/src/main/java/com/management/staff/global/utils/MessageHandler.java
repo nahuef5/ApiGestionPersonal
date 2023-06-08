@@ -16,5 +16,7 @@ public class MessageHandler {
     public static final String UPDATED="Recurso actulizado correctamente.";
     public static final String ELIMINATED="Recurso eliminado correctamente.";
     public static final String NOT_REMOVED="El recurso no ha sido eliminado.";
-    
+    //Mensajes del email
+    public static final String RESET_PASSWORD="Revisa la casilla de mensajes de tu mail para restaurar la contraseña.";
+    public static final String PASSWORD_CHANGED="Contraseña actualizada exitosamente.";
 }

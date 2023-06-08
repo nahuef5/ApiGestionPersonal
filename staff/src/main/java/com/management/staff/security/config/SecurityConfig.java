@@ -40,6 +40,8 @@ public class SecurityConfig{
                         "",
                         "/onlystaff",
                         "/login",
+                        "/email",
+                        "/email/**",
                         "/refresh-token",
                         "/register",
                         "onlystaff/getAll/",

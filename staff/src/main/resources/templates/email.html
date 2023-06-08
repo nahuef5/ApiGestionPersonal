@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+    <html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h2>Recuperar clave</h2>
+        <h3>Saludos! <span th:text="${username}"></span></h3>
+        <h4>Haga click en el siguiente boton para restaurar la clave a su cuenta</h4>
+        <a th:href="@{${url}}"><button>Reset Password</button></a>
+    </body>
+</html>
