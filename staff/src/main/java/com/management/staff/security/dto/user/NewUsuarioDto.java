@@ -1,4 +1,4 @@
-package com.management.staff.security.dto;
+package com.management.staff.security.dto.user;
 import com.management.staff.global.utils.validators.PasswordValid;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -18,9 +18,10 @@ public class NewUsuarioDto {
     @PasswordValid
     private String passwordConfirm;
 
-    public NewUsuarioDto(int dni, String email, String password) {
+    public NewUsuarioDto(int dni, String email,String username, String password) {
         this.dni = dni;
         this.email = email;
+        this.username=username;
         this.password = password;
     }
 }

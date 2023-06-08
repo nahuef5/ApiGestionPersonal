@@ -1,9 +1,5 @@
 package com.management.staff.global.exceptions;
 import com.management.staff.global.utils.*;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
-import io.jsonwebtoken.security.SignatureException;
 import jakarta.mail.MessagingException;
 import java.time.format.DateTimeParseException;
 import java.util.*;
@@ -40,7 +36,8 @@ public class GlobalException {
     @ExceptionHandler(DateTimeParseException.class)
     public ResponseEntity<MessageHandler> handleDateTimeParseException(DateTimeParseException e){
         String errorMessage = e.getMessage()+". El formato de la fecha debe ser 'yyyy-MM-dd'.";
-        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new MessageHandler(errorMessage, HttpStatus.NOT_ACCEPTABLE));
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(
+                new MessageHandler(errorMessage, HttpStatus.NOT_ACCEPTABLE));
     }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<MessageHandler> generalException(Exception e){
@@ -49,26 +46,12 @@ public class GlobalException {
     }
     @ExceptionHandler(MessagingException.class)
     public ResponseEntity<MessageHandler>throwMessaging(MessagingException e){
-        return ResponseEntity.internalServerError().body(new MessageHandler(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
+        return ResponseEntity.internalServerError().body(
+                new MessageHandler(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
     }
-    @ExceptionHandler(MalformedJwtException.class)
-    public ResponseEntity<MessageHandler>throwMalformedJwt(MalformedJwtException e){
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageHandler(e.getMessage(), HttpStatus.CONFLICT));
-    }
-    @ExceptionHandler(UnsupportedJwtException.class)
-    public ResponseEntity<MessageHandler>throwUnsoportedJwt(UnsupportedJwtException e){
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageHandler(e.getMessage(), HttpStatus.CONFLICT));
-    }
-    @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseEntity<MessageHandler>throwExpiredJwt(ExpiredJwtException e){
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageHandler(e.getMessage(), HttpStatus.CONFLICT));
-    }
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<MessageHandler>throwIlegalArgument(IllegalArgumentException e){
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageHandler(e.getMessage(), HttpStatus.CONFLICT));
-    }
-    @ExceptionHandler(SignatureException.class)
-    public ResponseEntity<MessageHandler>throwIlegalArgument(SignatureException e){
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageHandler(e.getMessage(), HttpStatus.CONFLICT));
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<MessageHandler>throwInvalidToken(InvalidTokenException e){
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new MessageHandler(e.getMessage(),HttpStatus.CONFLICT));
     }
 }

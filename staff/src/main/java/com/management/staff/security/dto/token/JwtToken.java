@@ -1,4 +1,4 @@
-package com.management.staff.security.utils;
+package com.management.staff.security.dto.token;
 import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor

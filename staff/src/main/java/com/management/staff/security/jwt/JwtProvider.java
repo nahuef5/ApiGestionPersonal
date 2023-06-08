@@ -1,6 +1,7 @@
 package com.management.staff.security.jwt;
-import com.management.staff.security.utils.JwtToken;
-import com.management.staff.security.utils.UserDetailsImpl;
+import com.management.staff.global.exceptions.InvalidTokenException;
+import com.management.staff.security.dto.token.JwtToken;
+import com.management.staff.security.services.userService.UserDetailsImpl;
 import com.nimbusds.jwt.*;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -80,7 +81,7 @@ public class JwtProvider{
                 .getSubject();
     }
     //validamos el token
-    public boolean isValidToken(String token) throws Exception{
+    public boolean isValidToken(String token)throws InvalidTokenException{
         try{
             Jwts.parserBuilder()
                     .setSigningKey(getKey(jwtSecret))
@@ -88,21 +89,12 @@ public class JwtProvider{
                     .parseClaimsJws(token);
             return true;
         }
-        
-        catch(MalformedJwtException e){
-            throw new MalformedJwtException("Token mal formado: ",e);
-        }
-        catch(UnsupportedJwtException e){
-            throw new UnsupportedJwtException("Token no soportado: ",e);
-        }
-        catch(ExpiredJwtException e){
-            throw new Exception("Token no soportado: ",e);
-        }
-        catch(IllegalArgumentException e){
-            throw new IllegalArgumentException("Argumentos invalidos: ",e);
-        }
-        catch(SignatureException e){
-            throw new SignatureException("Firma invalida: ",e);
+        catch(MalformedJwtException |
+              UnsupportedJwtException |
+              ExpiredJwtException |
+              IllegalArgumentException |
+              SignatureException e){
+            throw new InvalidTokenException(e.getMessage());
         }
     }
 }

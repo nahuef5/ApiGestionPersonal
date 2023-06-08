@@ -1,11 +1,8 @@
 package com.management.staff.security.controller;
-import com.management.staff.security.dto.LoginUserDto;
-import com.management.staff.security.dto.NewUsuarioDto;
+import com.management.staff.security.dto.user.*;
 import com.management.staff.security.entities.Usuario;
 import com.management.staff.security.services.userService.UsuarioService;
-import com.management.staff.security.utils.JwtToken;
 import jakarta.validation.Valid;
-import java.text.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("")
 @CrossOrigin(origins="http://localhost:5000/")
-public class AuthenticationController{
+public class CreateUserController{
     @Autowired
     private UsuarioService usuarioService;
     @PostMapping("/register")
@@ -29,12 +26,5 @@ public class AuthenticationController{
     public ResponseEntity<Usuario>createUserAdmin(@Valid @RequestBody NewUsuarioDto dto){
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.createAdmin(dto));
     }
-    @PostMapping("/login")
-    public ResponseEntity<JwtToken> login(@Valid @RequestBody LoginUserDto dto){
-        return ResponseEntity.ok(usuarioService.loginUser(dto));
-    }
-    @PostMapping("/refresh-token")
-    public JwtToken refreshToken(@RequestBody JwtToken token) throws ParseException{
-        return usuarioService.getRefreshToken(token);
-    }
+    
 }

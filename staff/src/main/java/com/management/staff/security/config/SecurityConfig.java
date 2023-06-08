@@ -37,16 +37,13 @@ public class SecurityConfig{
         httpSecurity
                 .authorizeHttpRequests()
                 .requestMatchers(
-                        "",
-                        "/onlystaff",
-                        "/login",
+                        "/",
                         "/email",
                         "/email/**",
                         "/refresh-token",
                         "/register",
-                        "onlystaff/getAll/",
-                        "onlystaff/getStaff/**",
-                        "/registerTrainee",
+                        "/onlystaff/getAll/",
+                        "/onlystaff/getStaff/**",
                         "/reg-admin"
                 ).permitAll()
         .anyRequest().authenticated();

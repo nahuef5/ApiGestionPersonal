@@ -3,15 +3,13 @@ import com.management.staff.entities.Staff;
 import com.management.staff.global.exceptions.BusinesException;
 import com.management.staff.global.utils.MessageHandler;
 import com.management.staff.repository.StaffRepository;
-import com.management.staff.security.dto.LoginUserDto;
-import com.management.staff.security.dto.NewUsuarioDto;
+import com.management.staff.security.dto.token.JwtToken;
+import com.management.staff.security.dto.user.*;
 import com.management.staff.security.entities.*;
 import com.management.staff.security.enums.RoleEnum;
 import com.management.staff.security.jwt.JwtProvider;
 import com.management.staff.security.repository.UsuarioRepository;
-import com.management.staff.security.services.CreateUserInterface;
 import com.management.staff.security.services.roleService.RoleService;
-import com.management.staff.security.utils.JwtToken;
 import java.text.ParseException;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +48,6 @@ public class UsuarioService implements CreateUserInterface{
             throw new BusinesException(MessageHandler.ALREADY_EXISTS);
         if(!dto.getPassword().equals(dto.getPasswordConfirm()))
             throw new BusinesException("Las contraseñas no coinciden.");
-        Staff staff = staffRepository.findByDni(dto.getDni()).orElseThrow(()->new BusinesException("No existe personal con ese dni"));
         
         String passwordEncode= passwordEncoder.encode(dto.getPasswordConfirm());
         Usuario user=new Usuario(
@@ -72,6 +69,8 @@ public class UsuarioService implements CreateUserInterface{
             throw new BusinesException(MessageHandler.ALREADY_EXISTS);
         if(!dto.getPassword().equals(dto.getPasswordConfirm()))
             throw new BusinesException("Las contraseñas no coinciden.");
+        Staff staff = staffRepository.findByDni(dto.getDni()).orElseThrow(
+                ()->new BusinesException("No existe personal con ese dni"));
         String passwordEncode= passwordEncoder.encode(dto.getPasswordConfirm());
         Usuario user=new Usuario(
                                 dto.getDni(),
@@ -91,6 +90,8 @@ public class UsuarioService implements CreateUserInterface{
             throw new BusinesException(MessageHandler.ALREADY_EXISTS);
         if(!dto.getPassword().equals(dto.getPasswordConfirm()))
             throw new BusinesException("Las contraseñas no coinciden");
+        Staff staff = staffRepository.findByDni(dto.getDni()).orElseThrow(
+                ()->new BusinesException("No existe personal con ese dni"));
         String passwordEncode= passwordEncoder.encode(dto.getPasswordConfirm());
         Usuario user=new Usuario(
                                 dto.getDni(),

@@ -46,7 +46,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
                         .setAuthentication(authenticationToken);
             }
         }
-        catch(UsernameNotFoundException e){}
+        catch(UsernameNotFoundException e){
+            throw new UsernameNotFoundException(e.getMessage());
+        }
         
         filterChain.doFilter(request, response);
     }
