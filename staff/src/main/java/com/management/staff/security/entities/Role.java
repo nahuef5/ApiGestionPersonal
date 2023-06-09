@@ -3,7 +3,7 @@ import com.management.staff.security.enums.RoleEnum;
 import jakarta.persistence.*;
 import lombok.*;
 @Entity
-@Table(name="tipo_rol")
+@Table(name="roles")
 @NoArgsConstructor
 @Getter @Setter
 public class Role{

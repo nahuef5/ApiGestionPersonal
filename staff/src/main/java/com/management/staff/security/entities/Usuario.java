@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.*;
 import lombok.*;
 @Entity
-@Table(name="tipo_usuario")
+@Table(name="usuarios")
 @NoArgsConstructor
 @Getter @Setter
 public class Usuario {
