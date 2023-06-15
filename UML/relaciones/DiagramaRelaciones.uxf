@@ -1,0 +1,98 @@
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>360</x><y>0</y><w>220</w><h>160</h></coordinates><panel_attributes>LocalDate
+--
+- year : integer
+- month: integer
+- day: integer
+--
++ LocalDate()
++ LocalDate(integer, integer, integer)
++ getYear(): integer
++ getMonth(): integer
++ getDay(): integer  </panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>450</x><y>150</y><w>60</w><h>100</h></coordinates><panel_attributes>lt=&lt;-
+- born
+m1=1</panel_attributes><additional_attributes>10;10;10;80</additional_attributes></element><element><id>Relation</id><coordinates><x>80</x><y>180</y><w>60</w><h>130</h></coordinates><panel_attributes>lt=&lt;-
+- area
+m1=1</panel_attributes><additional_attributes>10;10;10;110</additional_attributes></element><element><id>UMLClass</id><coordinates><x>740</x><y>290</y><w>190</w><h>200</h></coordinates><panel_attributes>Position
+--
+- id_position: short
+- basicSalary: double
+- staff: Set
+--
+Position(PositionEnum){
+position, 
+basicSalary
+}
++ Position()
++ setBasicSalary (double): void
++ addStaff (Staff): void
++ @Getter
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>770</x><y>50</y><w>120</w><h>170</h></coordinates><panel_attributes>&lt;&lt;enum&gt;&gt;
+PositionEnum
+
+--
++ PRESIDENTE
++ ACCCIONISTA
++ GERENTE
++ SUBGERENTE
++ ENCARGADO
++ EMPLEADO
++ SECRETARIO</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>830</x><y>210</y><w>80</w><h>100</h></coordinates><panel_attributes>lt=&lt;-
+m1=1
+- position</panel_attributes><additional_attributes>10;10;10;80</additional_attributes></element><element><id>Relation</id><coordinates><x>200</x><y>340</y><w>180</w><h>50</h></coordinates><panel_attributes>lt=&lt;-
+- staff
+m1=1..n</panel_attributes><additional_attributes>160;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>560</x><y>360</y><w>200</w><h>60</h></coordinates><panel_attributes>lt=&lt;-
+- staff
+m1=1..n</panel_attributes><additional_attributes>10;30;180;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>360</x><y>230</y><w>210</w><h>360</h></coordinates><panel_attributes>Staff
+--
+- id_staff: uuid
+- name: String
+- surname: String
+- address: String
+- dni: integer
+- basicSalary: double
+- grossSalary: double
+- netSalary: double
+--
++ getAreaName (): String
++ getPositionName (): String
+
++ Staff()
++ Staff(String, String, String, integer, 
+LocalDate, Area, Position)
+{...basicSalary}
+
++ setAddress(String): void
++ setPosition(Position): void
++ setBasicSalary(double): void
++ setGrossSalary(double): void
++ setNetSalary(double): void
++ @Getter</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>20</y><w>210</w><h>170</h></coordinates><panel_attributes>&lt;&lt;enum&gt;&gt;
+AreaEnum
+--
++ EJECUTIVO
++ ADMINISTRACION
++ CONTABILIDAD
++ RRHH
++ IT
++ MARKETING
++ PRODUCTION
++ VENTAS</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>20</x><y>290</y><w>190</w><h>140</h></coordinates><panel_attributes>Area
+--
+- id_area: short 
+- budget: float
+- staff: Set
+--
++ Area(AreaEnum){area, budget}
++ Area()
++ setBudget(float): void
++@Getter</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>600</x><y>520</y><w>250</w><h>160</h></coordinates><panel_attributes>Salary
+--
++ &lt;&lt;static&gt;&gt; &lt;&lt;final&gt;&gt; ANTIQUITY: float
++ &lt;&lt;static&gt;&gt; &lt;&lt;final&gt;&gt; PRESENTEEISM: float
++ &lt;&lt;static&gt;&gt; &lt;&lt;final&gt;&gt; INSSJP: float
++ &lt;&lt;static&gt;&gt; &lt;&lt;final&gt;&gt; PENSION: float
++ &lt;&lt;static&gt;&gt; &lt;&lt;final&gt;&gt; OBRA_SOCIAL: float
++ &lt;&lt;static&gt;&gt; &lt;&lt;final&gt;&gt; SINDICATO: float
+--
++ Salary()
++ &lt;&lt;static&gt;&gt; valueExtraHours(double): double</panel_attributes><additional_attributes></additional_attributes></element></diagram>

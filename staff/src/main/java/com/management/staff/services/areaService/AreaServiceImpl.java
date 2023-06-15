@@ -81,9 +81,9 @@ public class AreaServiceImpl implements AreaServiceInterface{
         Position updateByDto=positionRepository.findById(dto.getId_position()).get();
         //a staff le asignamos una nueva posicion
         staff.setPosition(updateByDto);
-        //actualizamos el sueldo del staff con el de la posicion que le corresponde
-        staff.setGrossSalary(updateByDto.getGrossSalary());
-        staff.setNetSalary(updateByDto.getNetSalary());
+        //actualizamos el sueldo bsico del staff con el de la posicion que le corresponde
+        staff.setGrossSalary(updateByDto.getBasicSalary());
+        
         staffRepository.save(staff);
         //tenemos que asignar este staff a la lista nueva posicion
         updateByDto.addStaff(staff);
@@ -110,7 +110,6 @@ public class AreaServiceImpl implements AreaServiceInterface{
         Staff staff =staffRepository.findByDni(dni).orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
         return staff;
     }
-
     @Override
     public Page<Area> getAllByPage(QueryPageable queryPageable) throws ListEmptyException {
         Sort sort= Sort.by(Sort.Direction.fromString(queryPageable.getOrder()),

@@ -1,14 +1,17 @@
 package com.management.staff.services.staffService;
 import com.management.staff.dto.staffDto.StaffDto;
 import com.management.staff.dto.staffDto.AnyoneReadsStaffDto;
+import com.management.staff.dto.staffDto.GrossSalaryStaffDto;
 import com.management.staff.entities.Staff;
 import com.management.staff.global.exceptions.*;
 import com.management.staff.global.utils.MessageHandler;
 import com.management.staff.models.QueryPageable;
+import com.management.staff.models.Salary;
 import com.management.staff.repository.StaffRepository;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 @Service
@@ -113,11 +116,56 @@ public class StaffServiceImpl implements StaffServiceInterface{
 
     @Override
     public Page<Staff> getAllStaffs(QueryPageable queryPageable) throws ListEmptyException {
-        Sort sort= Sort.by(Sort.Direction.fromString(queryPageable.getOrder()),
+        Sort sort= Sort.by(Sort.Direction.fromString(
+                queryPageable.getOrder()),
                 queryPageable.getOrderBy());
-        Pageable pageable = PageRequest.of(queryPageable.getPage(), queryPageable.getElementByPage(), sort);
+        Pageable pageable = PageRequest.of(
+                queryPageable.getPage(),
+                queryPageable.getElementByPage(),
+                sort);
         return repository.findAll(pageable);
     }
+    //modificar sueldo
 
-    
+    @Override
+    public void setGrossSalary(GrossSalaryStaffDto dto, int dni){
+        Staff staff=repository.findByDni(dni).get();
+        
+        double auxGross=staff.getBasicSalary();
+        double presentismo=staff.getBasicSalary()*Salary.PRESENTEEISM;
+        double antiguedad=staff.getBasicSalary()*(Salary.ANTIQUITY*dto.getQuantityAntiquity());
+        double extras=Salary.valueExtraHours(staff.getBasicSalary())*dto.getQuantityExtraHours();
+        
+        if(dto.isPresenteeism())
+            auxGross += presentismo;
+  
+        auxGross += antiguedad + extras;
+        staff.setGrossSalary(auxGross);
+    }
+
+    @Override
+    public void setNetSalary(GrossSalaryStaffDto dto, int dni){
+        Staff staff=repository.findByDni(dni).get();
+        double auxNet=staff.getGrossSalary();
+        
+        if(dto.isAfiliado())
+            auxNet -= staff.getGrossSalary()*Salary.SINDICATO;
+        
+        auxNet -= auxNet*Salary.INSSJP+
+                  auxNet*Salary.OBRA_SOCIAL+
+                  auxNet*Salary.PENSION;
+            staff.setNetSalary(auxNet);
+    }        
+
+    @Override
+    public MessageHandler updateStaffSalary(GrossSalaryStaffDto dto, int dni)throws ResourceNotFoundException{
+        Staff staff=repository.findByDni(dni)
+                .orElseThrow(
+                        ()->new ResourceNotFoundException(MessageHandler.NOT_FOUD)
+                );
+        setGrossSalary(dto, dni);
+        System.out.println(staff.getGrossSalary());
+        setNetSalary(dto, dni);
+        return new MessageHandler("Sueldo actualizado correctamente",HttpStatus.OK);
+    }
 }

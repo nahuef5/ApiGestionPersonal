@@ -7,8 +7,5 @@ import lombok.*;
 public class PositionDto{
     @Min(1000)
     @Max(1000000)
-    private float grossSalary;
-    @Min(1000)
-    @Max(1000000)
-    private float netSalary;
+    private float basicSalary;
 }

@@ -1,5 +1,6 @@
 package com.management.staff.entities;
 import com.fasterxml.jackson.annotation.*;
+import com.management.staff.models.Salary;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
@@ -8,7 +9,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name="personal_empresa")
-@Getter@Setter
+@Getter
 @NoArgsConstructor
 //La idea es crear el trabajador desde el enlace del area, donde se pasara el
 //puesto
@@ -39,12 +40,7 @@ public class Staff{
     @ManyToOne
     @JoinColumn(name="id_position")
     @JsonIgnore
-    private Position position; 
-
-    @NotNull
-    private float grossSalary;
-    @NotNull
-    private float netSalary;
+    private Position position;
     
     @JsonProperty("positionName")
     public String getPositionName(){
@@ -58,7 +54,16 @@ public class Staff{
             return area.getArea().name();
         return null;
     }
-    
+    @NotNull
+    private double basicSalary;
+    @NotNull
+    private double grossSalary;
+    @NotNull
+    private double netSalary;
+ 
+    /*@Transient
+    private Salary salary=new Salary(basicSalary);
+*/
     public Staff(String name, String surname, String address, int dni, LocalDate born, Area area, Position position) {
         this.name = name;
         this.surname = surname;
@@ -67,21 +72,23 @@ public class Staff{
         this.born = born;
         this.area = area;
         this.position = position;
-        this.grossSalary=position.getGrossSalary();
-        this.netSalary=position.getNetSalary();
+        this.basicSalary=position.getBasicSalary();
     }
-    //Setters Adress, Area, Position, GrossSalary, NetSalary
-    //Unico atributos que se pueden modificar
+    //Setters Adress, Position, Gross, Net, basic
+    //Unicos atributos que se pueden modificar
     public void setAddress(String address) {
         this.address = address;
     }
     public void setPosition(Position position) {
         this.position = position;
     }
-    public void setGrossSalary(float grossSalary) {
+    public void setBasicSalary(double basicSalary) {
+        this.basicSalary = basicSalary;
+    }
+    public void setGrossSalary(double grossSalary) {
         this.grossSalary = grossSalary;
     }
-    public void setNetSalary(float netSalary) {
+    public void setNetSalary(double netSalary) {
         this.netSalary = netSalary;
     }
 }
