@@ -1,4 +1,4 @@
-<h1 align="center">Gestion Personal</h1>
+<h1 align="center">Gestión Personal</h1>
 
 <h2 align="center">Diagrama de clases con UML y Api elaborada con Spring boot</h2>
 <h6>Api que permite la gestión del personal de una empresa. Actualiza sueldo basico, bruto y neto en función de recargos y aportes,
@@ -25,8 +25,8 @@
 
 <h3 align="left">Proximas implementaciones y mejoras:</h3>
 
-<p>Documentacion con Swagger, Seguridad: crear 1 staff(de areas fuera de RRHH y Ejecutivo) -> crea 1 User ,
-mejorar metodos creacion puestos ejecutivos, mejorar abstraccion de clases, consumo de API</p>
+<p>Documentación con Swagger, Seguridad: crear 1 staff(de áreas fuera de RRHH y Ejecutivo) -> crea 1 User ,
+mejorar métodos creación puestos ejecutivos, mejorar abstracción de clases, consumo de API</p>
 
 <h3 align="left">Orden de ramas (según se implementan las mejoras):</h3>
 
