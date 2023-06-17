@@ -23,21 +23,19 @@ public class StaffController{
     public ResponseEntity<Page<Staff>> getAll(QueryPageable queryPageable){
         return ResponseEntity.ok(service.getAllStaffs(queryPageable));
     }
-    
     //Get a staff
     @PreAuthorize("isAuthenticated()")
     //@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_ADMINTRAINEE', 'ROLE_USUARIO')")
     @GetMapping("byDni/{dni}/")
-    public ResponseEntity<StaffDto> getIndividualAutenticado(@PathVariable ("dni") int dni) throws ResourceNotFoundException, Exception{
-        
-            return ResponseEntity.status(HttpStatus.FOUND).body(service.getOneStaff(dni));
-    
-        
+    public ResponseEntity<StaffDto> getIndividualAutenticado
+        (@PathVariable ("dni") int dni)throws ResourceNotFoundException,Exception{
+        return ResponseEntity.status(HttpStatus.FOUND).body(service.getOneStaff(dni));  
     }
     //Update salary
     @PreAuthorize("hasAuthority('ROLE_ADMINTRAINEE')")
     @PutMapping("update-salary/{dni}")
-    public ResponseEntity<MessageHandler> setSalary(@PathVariable ("dni") int dni,@Valid @RequestBody GrossSalaryStaffDto dto){
+    public ResponseEntity<MessageHandler> setSalary(@PathVariable ("dni") int dni,
+            @Valid @RequestBody GrossSalaryStaffDto dto){
         return ResponseEntity.status(HttpStatus.OK).body(service.updateStaffSalary(dto, dni));
     }
 }

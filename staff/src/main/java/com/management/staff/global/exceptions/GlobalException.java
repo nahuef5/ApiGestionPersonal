@@ -1,9 +1,11 @@
 package com.management.staff.global.exceptions;
 import com.management.staff.global.utils.*;
 import jakarta.mail.MessagingException;
+import java.nio.file.AccessDeniedException;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 import org.springframework.http.*;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,5 +55,16 @@ public class GlobalException {
     public ResponseEntity<MessageHandler>throwInvalidToken(InvalidTokenException e){
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(new MessageHandler(e.getMessage(),HttpStatus.CONFLICT));
+    }
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<MessageHandler> handleBadCredentialsException(BadCredentialsException e){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new MessageHandler(e.getMessage(),HttpStatus.NOT_FOUND));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<MessageHandler> handleAccessDeniedException(AccessDeniedException e){
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new MessageHandler(e.getMessage(), HttpStatus.FORBIDDEN));
     }
 }
