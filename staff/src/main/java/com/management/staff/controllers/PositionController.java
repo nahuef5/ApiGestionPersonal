@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/position/")
+@CrossOrigin(origins="http://localhost:5000/")
 public class PositionController {
     @Autowired
     private PositionServiceImpl service;
@@ -33,7 +34,9 @@ public class PositionController {
     }
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping("updateSalary/{id_position}/")
-    public ResponseEntity<MessageHandler>updateSalaryByPosition(@PathVariable("id_position")short id_position,@Valid @RequestBody PositionDto dto){
+    public ResponseEntity<MessageHandler>updateSalaryByPosition(
+            @PathVariable("id_position")short id_position,
+            @Valid @RequestBody PositionDto dto){
         return ResponseEntity.ok(service.updateSalaryByPosition(id_position, dto));
     }
 }

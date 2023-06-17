@@ -1,17 +1,22 @@
 package com.management.staff.services.areaService;
 import com.management.staff.dto.staffDto.*;
 import com.management.staff.entities.*;
+import com.management.staff.enums.AreaEnum;
 import com.management.staff.global.exceptions.*;
 import com.management.staff.global.utils.*;
 import com.management.staff.models.QueryPageable;
 import com.management.staff.repository.*;
+import com.management.staff.security.entities.Role;
+import com.management.staff.security.entities.Usuario;
+import com.management.staff.security.enums.RoleEnum;
+import com.management.staff.security.repository.*;
+import com.management.staff.security.services.roleService.RoleService;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 @Service
@@ -23,6 +28,12 @@ public class AreaServiceImpl implements AreaServiceInterface{
     private StaffRepository staffRepository;    
     @Autowired
     private PositionRepository positionRepository;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+    @Autowired
+    private RoleService roleService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     
     //obtiene lista de areas
     @Override
@@ -52,11 +63,55 @@ public class AreaServiceImpl implements AreaServiceInterface{
                 dto.getDni(),
                 dto.getBorn(),
                 area,
-                position);
+                position,
+                dto.getContractStart(),
+                dto.getEmail());
+        
         staffRepository.save(staff);
+        //va despues sino no se podra crear por el uuid
+        if(
+            !staff.getArea().getArea().equals(AreaEnum.RRHH)
+                &&
+            !staff.getArea().getArea().equals(AreaEnum.EJECUTIVO)
+           ){
+           saveUsuarioByStaff(staff); 
+        }
         MessageHandler msg = new MessageHandler(MessageHandler.CREATED, HttpStatus.CREATED);
         return msg;
     }
+    //Guardar un usuario con un staff
+    private Usuario saveUsuarioByStaff(Staff staff){
+        //password sera name, area y dni del staff
+        String passwordEncode=passwordEncoder.encode
+                (
+                    staff.getName()+"_"+
+                    staff.getAreaName()+"_"+
+                    staff.getDni()
+                );
+        //sustraemos parte del id del staff para luego concatenar a username del user
+        String subStringID = staff.getId_staff().substring(2, 9);
+        //sustraemos parte del dni del staff para luego concatenar a username del user
+        String subStringDNI = String.valueOf(staff.getDni()).substring(6);
+        
+        String username=staff.getName()
+                +
+                staff.getSurname()
+                +
+                subStringID+subStringDNI;
+        
+        Usuario user=new Usuario(
+                                staff.getDni(),
+                                staff.getEmail(),
+                                username,
+                                passwordEncode);
+        
+        List<Role> roles = new ArrayList<>();
+        roles.add(roleService.getRoleByName(RoleEnum.ROLE_USUARIO).get());
+        user.setRoles(roles);
+        return usuarioRepository.save(user);
+        
+    }
+    
     //utilizamos dtoAddress para actualizar domicilio de staff, pasamos dni para saber cual hay que actualizar
     @Override
     public MessageHandler updateAddressOfStaff(int dni, StaffAddressDto dto) throws ResourceNotFoundException{

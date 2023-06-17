@@ -83,27 +83,26 @@ public class UsuarioService implements CreateUserInterface{
         user.setRoles(roles);
         return usuarioRepository.save(user);
     }
-
     @Override
-    public Usuario createUser(NewUsuarioDto dto) throws BusinesException {
+    public Usuario createUserEjecutivo(NewUsuarioDto dto) throws BusinesException {
         if(existsUser(dto))
             throw new BusinesException(MessageHandler.ALREADY_EXISTS);
         if(!dto.getPassword().equals(dto.getPasswordConfirm()))
             throw new BusinesException("Las contraseñas no coinciden");
         Staff staff = staffRepository.findByDni(dto.getDni()).orElseThrow(
-                ()->new BusinesException("No existe personal con ese dni"));
+                ()->new BusinesException("No existe un ejecutivo con ese dni"));
         String passwordEncode= passwordEncoder.encode(dto.getPasswordConfirm());
         Usuario user=new Usuario(
                                 dto.getDni(),
                                 dto.getEmail(),
                                 dto.getUsername(),
                                 passwordEncode);
-        
         List<Role> roles = new ArrayList<>();
-        roles.add(roleService.getRoleByName(RoleEnum.ROLE_USUARIO).get());
+        roles.add(roleService.getRoleByName(RoleEnum.ROLE_EJECUTIVO).get());
         user.setRoles(roles);
         return usuarioRepository.save(user);
     }
+
     //LOGIN
     public JwtToken loginUser(LoginUserDto dto){
         

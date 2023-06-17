@@ -1,0 +1,151 @@
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>1980</x><y>130</y><w>210</w><h>360</h></coordinates><panel_attributes>Staff
+--
+- id_staff: uuid
+- name: String
+- surname: String
+- address: String
+- dni: integer
+- basicSalary: double
+- grossSalary: double
+- netSalary: double
+--
++ getAreaName (): String
++ getPositionName (): String
+
++ Staff()
++ Staff(String, String, String, integer, 
+LocalDate, Area, Position)
+{...basicSalary}
+
++ setAddress(String): void
++ setPosition(Position): void
++ setBasicSalary(double): void
++ setGrossSalary(double): void
++ setNetSalary(double): void
++ @Getter</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1630</x><y>100</y><w>210</w><h>80</h></coordinates><panel_attributes>&lt;&lt;interface&gt;&gt;
+StaffRepository
+--
++ findByDni (integer): Optional
++ existsByDni (integer): boolean</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1100</x><y>100</y><w>390</w><h>130</h></coordinates><panel_attributes>StaffServiceImpl
+--
+
+--
++ getAllStaffs (QueryPageable): Page&lt;Staff&gt;
++ getOneStaff (integer): StaffDto
++ setGrossSalary (GrossSalaryStaffDto, integer): void
++ setNetSalary (GrossSalaryStaffDto, integer): void
++ updateStaffSalary(GrossSalaryStaffDto, integer): Messagehandler</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>350</x><y>100</y><w>440</w><h>100</h></coordinates><panel_attributes>StaffController
+--
+
+--
++ getAll(QueryPageable): ResponseEntity&lt;Page&lt;Staff&gt;&gt;
++ getOneStaff (integer): ResponseEntity&lt;Staff&gt;
++ setSalary (GrossSalaryStaffDto, integer): ResponseEntity&lt;MessageHandler
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1830</x><y>130</y><w>170</w><h>30</h></coordinates><panel_attributes>lt=&lt;.</panel_attributes><additional_attributes>150;10;70;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1480</x><y>110</y><w>170</w><h>40</h></coordinates><panel_attributes>lt=&lt;.
+&lt;&lt;repository&gt;&gt;</panel_attributes><additional_attributes>150;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>780</x><y>100</y><w>340</w><h>50</h></coordinates><panel_attributes>lt=&lt;.
+&lt;&lt;service&gt;&gt;</panel_attributes><additional_attributes>320;10;250;10;250;30;10;30</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1610</x><y>440</y><w>220</w><h>160</h></coordinates><panel_attributes>LocalDate
+--
+- year : integer
+- month: integer
+- day: integer
+--
++ LocalDate()
++ LocalDate(integer, integer, integer)
++ getYear(): integer
++ getMonth(): integer
++ getDay(): integer  </panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1820</x><y>200</y><w>180</w><h>280</h></coordinates><panel_attributes>lt=&lt;-
+- born
+
+- contractStart
+m1=1</panel_attributes><additional_attributes>10;250;50;250;50;10;160;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1310</x><y>330</y><w>210</w><h>140</h></coordinates><panel_attributes>Salary
+--
+_+ANTIQUITY: float = 0.01_
+_+PRESENTEEISM: float = 0.1_
+_+INSSJP: floa t= 0.03_
+_+PENSION: float = 0.11_
+_+OBRA_SOCIAL: float = 0.03_
+_+SINDICATO: float = 0.02_
+--
+_+valueExtraHours (double): double_</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1230</x><y>230</y><w>100</w><h>160</h></coordinates><panel_attributes>lt=&lt;.
+</panel_attributes><additional_attributes>80;140;10;140;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1220</x><y>640</y><w>210</w><h>320</h></coordinates><panel_attributes>StaffDto
+--
+- name: String
+- surname: String
+- address: String
+- dni: int
+- area: String
+- position: String 
+- basicSalary: double
+- grossSalary: double
+- netSalary: double
+--
++ StaffDto()
++ StaffDto(
+ String, String, String, int, LocalDate, String
+)
++ StaffDto(
+ String, String, String, int, LocalDate,
+ String, double, double, double
+)
++ @Getter
++ @Setter</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1420</x><y>440</y><w>250</w><h>320</h></coordinates><panel_attributes>lt=&lt;-
+- born
+
+- contractStart
+m1=1</panel_attributes><additional_attributes>190;10;150;10;150;300;10;300</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1670</x><y>0</y><w>130</w><h>70</h></coordinates><panel_attributes>&lt;&lt;interface&gt;&gt;
+/JpaRepository/
+&lt;T, ID&gt;
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1730</x><y>60</y><w>30</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;40</additional_attributes></element><element><id>UMLClass</id><coordinates><x>970</x><y>650</y><w>210</w><h>200</h></coordinates><panel_attributes>GrossSalaryStaffDto
+--
+- presenteeism: boolean
+- afiliado: boolean
+- quantityAntiquity: short
+- quantityExtraHours: short
+--
++ GrossSalaryStaffDto()
++ GrossSalaryStaffDto(
+boolean, boolean, short, short)
++ getPresenteeism(): boolean
++ getAfiliado(): boolean
++ getQuantityAntiquity(): short
++ getQuantityExtraHours():short</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>830</x><y>430</y><w>390</w><h>130</h></coordinates><panel_attributes>&lt;&lt;interface&gt;&gt;
+/StaffServiceInterface/
+-
+-
++ getAllStaffs (QueryPageable): Page&lt;Staff&gt;
++ getOneStaff (integer): Staff
++ setGrossSalary (GrossSalaryStaffDto, integer): void
++ setNetSalary (GrossSalaryStaffDto, integer): void
++ updateStaffSalary(GrossSalaryStaffDto, integer): Messagehandler</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1090</x><y>220</y><w>30</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;210;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1060</x><y>550</y><w>30</w><h>120</h></coordinates><panel_attributes>lt=&lt;.
+</panel_attributes><additional_attributes>10;100;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1180</x><y>550</y><w>100</w><h>110</h></coordinates><panel_attributes>lt=&lt;.
+</panel_attributes><additional_attributes>80;90;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>550</x><y>700</y><w>390</w><h>110</h></coordinates><panel_attributes>&lt;&lt;interface&gt;&gt;
+/QueryPageable/
+-
+-
++ getPage (): Integer
++ getElementByPage (): Integer
++ getOrderBy (): String
++  getOrder (): String</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>420</y><w>570</w><h>220</h></coordinates><panel_attributes>MessageHandler
+--
+- message: String
+_+NOT_FOUD: String="No existe ese recurso."_
+_+EMPTY_COLLECTION: String="La lista de recursos se encuentra vacía."_
+_+ALREADY_EXISTS: String="Ya existe un recurso con ese dni, ese mail o ese nombre de usuario."_
+_+CREATED: String="Recurso creado exitosamente."_
+_+UPDATED: String="Recurso actulizado correctamente."_
+_+ELIMINATED: String="Recurso eliminado correctamente."_
+_+NOT_REMOVED: String="El recurso no ha sido eliminado."_
+_+RESET_PASSWORD: String="Revisa la casilla de mensajes de tu mail para restaurar la contraseña."_
+_+PASSWORD_CHANGED: String="Contraseña actualizada exitosamente."_
+--
++ MessageHandler ()
++ MessageHandler (String, HttpStatus)</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>800</x><y>550</y><w>100</w><h>170</h></coordinates><panel_attributes>lt=&lt;.
+</panel_attributes><additional_attributes>10;150;80;10</additional_attributes></element><element><id>Relation</id><coordinates><x>560</x><y>500</y><w>290</w><h>40</h></coordinates><panel_attributes>lt=&lt;.
+</panel_attributes><additional_attributes>10;20;270;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>170</x><y>220</y><w>100</w><h>50</h></coordinates><panel_attributes>&lt;&lt;enum&gt;&gt;
+HttpStatus
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>220</x><y>260</y><w>70</w><h>180</h></coordinates><panel_attributes>lt=&lt;-
+- status
+m1=1</panel_attributes><additional_attributes>10;10;10;160</additional_attributes></element><element><id>Relation</id><coordinates><x>260</x><y>190</y><w>140</w><h>80</h></coordinates><panel_attributes>lt=&lt;.
+</panel_attributes><additional_attributes>10;60;120;60;120;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>550</x><y>290</y><w>100</w><h>30</h></coordinates><panel_attributes>ResponseEntity
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>580</x><y>190</y><w>30</w><h>120</h></coordinates><panel_attributes>lt=&lt;.
+</panel_attributes><additional_attributes>10;100;10;10</additional_attributes></element></diagram>

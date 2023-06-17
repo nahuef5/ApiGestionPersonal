@@ -42,8 +42,6 @@ public class SecurityConfig{
                         "/email/**",
                         "/refresh-token",
                         "/register",
-                        "/staff/",
-                        "/onlystaff/getOne/**",
                         "/reg-admin"
                 ).permitAll()
         .anyRequest().authenticated();

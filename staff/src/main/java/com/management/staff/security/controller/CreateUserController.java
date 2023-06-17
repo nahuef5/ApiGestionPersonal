@@ -14,8 +14,8 @@ public class CreateUserController{
     @Autowired
     private UsuarioService usuarioService;
     @PostMapping("/register")
-    public ResponseEntity<Usuario>createNormalUser(@Valid @RequestBody NewUsuarioDto dto){
-        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.createUser(dto));
+    public ResponseEntity<Usuario>createUserEjecutivo(@Valid @RequestBody NewUsuarioDto dto){
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.createUserEjecutivo(dto));
     }
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/registerTrainee")

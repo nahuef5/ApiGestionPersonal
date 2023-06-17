@@ -1,14 +1,8 @@
 package com.management.staff.dto.staffDto;
 import com.management.staff.global.utils.validators.ValidDate;
-import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 import lombok.*;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter @Setter
@@ -29,15 +23,21 @@ public class StaffDto{
     private LocalDate born;
     private String area;
     private String position;
+    private LocalDate contractStart;
+    @Email
+    private String email;
+    private double basicSalary;
     private double grossSalary;
     private double netSalary;
     //Para crear objetos de entidad
-    public StaffDto(String name, String surname, String address, int dni, LocalDate born, String position) {
+    public StaffDto(String name, String surname, String address, int dni, LocalDate born, String position, LocalDate contractStart,String email) {
         this.name = name;
         this.surname = surname;
         this.address = address;
         this.dni = dni;
         this.born = born;
         this.position = position;
+        this.contractStart=contractStart;
+        this.email=email;
     }
 }

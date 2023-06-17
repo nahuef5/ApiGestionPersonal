@@ -1,7 +1,4 @@
 package com.management.staff.models;
-import lombok.*;
-@Getter @Setter
-@NoArgsConstructor
 public class Salary {
     //atributos que suman valor al salario
     public static final float ANTIQUITY=0.01f;

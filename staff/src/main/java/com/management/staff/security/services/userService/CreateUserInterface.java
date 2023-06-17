@@ -5,5 +5,5 @@ import com.management.staff.security.entities.Usuario;
 public interface CreateUserInterface{
     Usuario createAdmin(NewUsuarioDto dto)throws BusinesException;
     Usuario createTrainee(NewUsuarioDto dto)throws BusinesException;
-    Usuario createUser(NewUsuarioDto dto)throws BusinesException;
+    Usuario createUserEjecutivo(NewUsuarioDto dto)throws BusinesException;
 }

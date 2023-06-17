@@ -1,17 +1,16 @@
 package com.management.staff.services.staffService;
-import com.management.staff.dto.staffDto.StaffDto;
-import com.management.staff.dto.staffDto.AnyoneReadsStaffDto;
-import com.management.staff.dto.staffDto.GrossSalaryStaffDto;
+import com.management.staff.dto.staffDto.*;
 import com.management.staff.entities.Staff;
 import com.management.staff.global.exceptions.*;
 import com.management.staff.global.utils.MessageHandler;
-import com.management.staff.models.QueryPageable;
-import com.management.staff.models.Salary;
+import com.management.staff.models.*;
 import com.management.staff.repository.StaffRepository;
-import java.util.*;
+import com.management.staff.security.services.userService.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 @Service
@@ -20,100 +19,49 @@ public class StaffServiceImpl implements StaffServiceInterface{
     @Autowired
     private StaffRepository repository;
     
-        //COLECCION DE VISTA UNIVERSAL
-    private Set<AnyoneReadsStaffDto> listaUniversal= new HashSet<>();
-        //OBJETO VISTA UNIVERSAL
-    private AnyoneReadsStaffDto individual_universal=new AnyoneReadsStaffDto();
-        //OBJETO VISTA AUTENTICADA
-    private StaffDto individual_autenticado=new StaffDto();
+    private StaffDto staffDto=new StaffDto();
     
-    /*Objetos*/
-    //SETEADOR STAFF VISTA AUTENTICADA
-    private void setIndividualAutenticado(int dni) throws ResourceNotFoundException{
-        Staff staff = repository.findByDni(dni).orElseThrow(()-> new ResourceNotFoundException(MessageHandler.NOT_FOUD));
-                individual_autenticado.setName(
-                        staff.getName());
-                individual_autenticado.setSurname(
-                        staff.getSurname());
-                individual_autenticado.setAddress(
-                        staff.getAddress());
-                individual_autenticado.setDni(
-                        staff.getDni());
-                individual_autenticado.setBorn(
-                        staff.getBorn());
-                individual_autenticado.setArea(
-                        staff.getArea().getArea().name());
-                individual_autenticado.setPosition(
-                        staff.getPosition().getPosition().name());
-                individual_autenticado.setGrossSalary(
-                        staff.getGrossSalary());
-                individual_autenticado.setNetSalary(
-                        staff.getNetSalary());
+    //SETEADOR STAFF VISTA 
+    private void setDto(int dni) throws ResourceNotFoundException{
+        Staff staff = repository.findByDni(dni).orElseThrow(()-> new ResourceNotFoundException(MessageHandler.NOT_FOUD));                
+        StaffDto dto=new StaffDto(
+                    staff.getName(),
+                    staff.getSurname(),
+                    staff.getAddress(),
+                    staff.getDni(),
+                    staff.getBorn(),
+                    staff.getArea().getArea().name(),
+                    staff.getPosition().getPosition().name(),
+                    staff.getContractStart(),
+                    staff.getEmail(),
+                    staff.getBasicSalary(),
+                    staff.getGrossSalary(),
+                    staff.getNetSalary()
+                    );
+            this.staffDto=dto;
     }
-        
-        //GET AUTENTICADO
+    //obtener dni desde el objeto autenticado
+    private int getDniFromAuthentication(Authentication authentication) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        return userDetails.getDni();
+    }
     @Override
-    public StaffDto getIndividualAutenticado(int dni)throws ResourceNotFoundException {
-        setIndividualAutenticado(dni);
-        return individual_autenticado;
-    }
-        //SETEADOR STAFF VISTA UNIVERSAL
-    private void setIndividualUniversal(int dni) throws ResourceNotFoundException{
-        Staff staff = repository.findByDni(dni).orElseThrow(()-> 
-                new ResourceNotFoundException(MessageHandler.NOT_FOUD));
-            individual_universal.setName(
-                    staff.getName());
-            individual_universal.setSurname(
-                    staff.getSurname());
-            individual_universal.setBorn(
-                    staff.getBorn());
-            individual_universal.setDni(
-                    staff.getDni());
-                //TRAER VALOR NOMBRE DEL ENUM
-            individual_universal.setArea(
-                    staff.getArea().getArea().name());
-            individual_universal.setPosition(
-                    staff.getPosition().getPosition().name());
-    }
-        //GET UNIVERSAL
-    @Override
-    public AnyoneReadsStaffDto getIndividualUniversal(int dni)throws ResourceNotFoundException {
-        setIndividualUniversal(dni);
-        return individual_universal;
-    }
-    
-    /*Listas*/
-    
-        //SETTEAR COLECCION STAFF DE VISTA UNIVERSAL
-    private void setListaUniversal()throws ListEmptyException{
-        if(repository.findAll().isEmpty())
-            throw new ListEmptyException(MessageHandler.EMPTY_COLLECTION);
-        for(Staff stf: repository.findAll()){
-            AnyoneReadsStaffDto dto=new AnyoneReadsStaffDto(
-                    stf.getName(),
-                    stf.getSurname(),
-                    stf.getBorn(),
-                    stf.getDni(),
-                    stf.getArea().getArea().name(), 
-                    stf.getPosition().getPosition().name());
-            listaUniversal.add(dto);            
-        }       
-    }
-        //GET LISTA UNIVERSAL
-    @Override
-    public Set<AnyoneReadsStaffDto> getListaUniversal() throws ListEmptyException{
-        setListaUniversal();
-        return listaUniversal;
-    }
-        //GET AUTENTICADO
-    @Override
-    public List<Staff> getListaAutenticado() throws ListEmptyException{
-        if(repository.findAll().isEmpty()){
-            throw new ListEmptyException(MessageHandler.EMPTY_COLLECTION);
+    public StaffDto getOneStaff(int dni)throws ResourceNotFoundException, Exception {
+        //obtengo el usuario autenticado
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        //podra acceder al recurso solo si comparte dni o si tiene rol admintrainee
+        if(
+            dni == getDniFromAuthentication(authentication)
+                ||
+            authentication
+                .getAuthorities().stream().anyMatch(
+                    auth -> auth.getAuthority().equals("ROLE_ADMINTRAINEE"))
+                ){
+            setDto(dni);
+            return staffDto;
         }
-        return repository.findAll();
+        throw new Exception("No tiene permitido ver los datos de ese personal");
     }
-
     @Override
     public Page<Staff> getAllStaffs(QueryPageable queryPageable) throws ListEmptyException {
         Sort sort= Sort.by(Sort.Direction.fromString(
@@ -126,7 +74,6 @@ public class StaffServiceImpl implements StaffServiceInterface{
         return repository.findAll(pageable);
     }
     //modificar sueldo
-
     @Override
     public void setGrossSalary(GrossSalaryStaffDto dto, int dni){
         Staff staff=repository.findByDni(dni).get();
@@ -142,7 +89,6 @@ public class StaffServiceImpl implements StaffServiceInterface{
         auxGross += antiguedad + extras;
         staff.setGrossSalary(auxGross);
     }
-
     @Override
     public void setNetSalary(GrossSalaryStaffDto dto, int dni){
         Staff staff=repository.findByDni(dni).get();
@@ -156,7 +102,6 @@ public class StaffServiceImpl implements StaffServiceInterface{
                   auxNet*Salary.PENSION;
             staff.setNetSalary(auxNet);
     }        
-
     @Override
     public MessageHandler updateStaffSalary(GrossSalaryStaffDto dto, int dni)throws ResourceNotFoundException{
         Staff staff=repository.findByDni(dni)
