@@ -1,4 +1,5 @@
 package com.management.staff.security.services.securityMail.mailService;
+import com.management.staff.entities.Staff;
 import com.management.staff.global.exceptions.BusinesException;
 import com.management.staff.global.exceptions.ResourceNotFoundException;
 import com.management.staff.global.utils.MessageHandler;
@@ -26,16 +27,13 @@ public class MailService{
     
     @Value("${spring.mail.username}")
     private String mailFrom;
-    @Value("${mail.urlFront}")
-    private String urlFront;
-    
+    @Value("${mail.urlFrontResetPassword}")
+    private String urlFrontResetPassword;    
     @Autowired
     private UsuarioRepository usuarioRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
-    
-    private final String SUBJECT="Cambio de contraseña";
-    
+    private final String RESET_PASSWORD="Cambiar contraseña.";
     private String recoverPassword(){
         UUID uuid = UUID.randomUUID();
         String recoverPassword=uuid.toString();
@@ -58,7 +56,7 @@ public class MailService{
             Context context= new Context();
             Map<String, Object>model=new HashMap<>();
             model.put("username", dto.getUsername());
-            model.put("url", urlFront + dto.getForgottenPassword());
+            model.put("url", urlFrontResetPassword + dto.getForgottenPassword());
             context.setVariables(model);
             String html=templateEngine.process("email", context);
             messageHelper.setFrom(dto.getMailFrom());
@@ -77,7 +75,7 @@ public class MailService{
         
         dto.setMailFrom(mailFrom);
         dto.setMailTo(user.getEmail());
-        dto.setSubject(SUBJECT);
+        dto.setSubject(RESET_PASSWORD);
         dto.setUsername(user.getUsername());
         
         String password=recoverPassword();
@@ -103,5 +101,59 @@ public class MailService{
         usuarioRepository.save(user);
         MessageHandler message= new MessageHandler(MessageHandler.PASSWORD_CHANGED, HttpStatus.CREATED);
         return message;
+    }
+    //send staff
+    private final String WELCOME="Bienvenid@";
+    @Value("${mail.urlFrontLogin}")
+    private String urlFrontLogin;
+    private void sendEmailStaff(EmailSenderDto dto) throws MessagingException{
+        MimeMessage message=javaMail.createMimeMessage();
+        try{
+            MimeMessageHelper messageHelper= new MimeMessageHelper(message, true);
+            Context context= new Context();
+            Map<String, Object>model=new HashMap<>();
+            model.put("name", dto.getName());
+            model.put("username", dto.getUsername());
+            model.put("password", dto.getPassword());
+            model.put("url", urlFrontLogin);
+            context.setVariables(model);
+            String html=templateEngine.process("emailStaff", context);
+            messageHelper.setFrom(dto.getMailFrom());
+            messageHelper.setTo(dto.getMailTo());
+            messageHelper.setSubject(dto.getSubject());
+            messageHelper.setText(html, true);
+            
+            javaMail.send(message);
+        }
+        catch(MessagingException e){
+            throw new MessagingException("Problemas al enviar el mail: ",e);
+        }
+    }
+    public void sendWelcom(Staff staff) throws MessagingException{
+
+        EmailSenderDto dto=new EmailSenderDto();
+        String subStringDNI = String.valueOf(staff.getDni()).substring(5);
+        
+        String username=
+                staff.getName()
+                +
+                staff.getSurname()
+                +
+                subStringDNI;
+        
+        String subStringID = staff.getId_staff().substring(2, 10);
+        String password=
+                staff.getName()+"_"+
+                staff.getAreaName()+"_"+
+                subStringID;
+        
+        dto.setMailFrom(mailFrom);
+        dto.setMailTo(staff.getEmail());
+        dto.setSubject(WELCOME);
+        dto.setName(staff.getName());
+        dto.setUsername(username);
+        dto.setPassword(password);
+        
+        sendEmailStaff(dto);
     }
 }

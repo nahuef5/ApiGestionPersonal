@@ -6,6 +6,7 @@ import com.management.staff.global.utils.*;
 import com.management.staff.global.utils.validators.DateValidator;
 import com.management.staff.models.QueryPageable;
 import com.management.staff.services.areaService.AreaServiceImpl;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,10 @@ public class AreaController{
     public ResponseEntity<MessageHandler>saveStaff(
         @PathVariable("id_area")short id_area,
         @PathVariable("id_position")short id_position,
-        @Valid @RequestBody StaffDto dto)throws ResourceNotFoundException, BusinesException{
-            return ResponseEntity.status(HttpStatus.CREATED)
+        @Valid @RequestBody StaffDto dto)
+            throws ResourceNotFoundException,BusinesException, MessagingException{
+        
+        return ResponseEntity.status(HttpStatus.CREATED)
                     .body(areaServiceImpl.saveNewStaff(id_area, id_position, dto));
     }
     @PreAuthorize("hasAuthority('ROLE_ADMINTRAINEE')")

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+    <html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h2 align="center">Le damos la bienvenida a nuestra empresa!</h2>
+        <h4>Saludos <span th:text="${name}"></span>.</h4>
+        <p>Gracias por formar parte de nuestra comunidad empresarial.
+            Usted fue registrad@ en nuestra base de datos. Para ver 
+            la infotmación guardada y conocer como varía su
+        salario mes a mes, podrá acceder con los siguientes datos:</p>
+        <ul>
+            <li>Nombre de usuario: <span th:text="${username}"></span></li>
+            <li>Contraseña: <span th:text="${password}"></span></li>
+        </ul>
+        <h5>Asegurese de guardar bien esta información para acceder en el futuro.</h5>
+        <br>
+        <h6 align="center">Haga click en el siguiente boton para acceder a su cuenta.</h6>
+        <a th:href="@{${url}}"><button>Iniciar Sesión</button></a>
+    </body>
+</html>

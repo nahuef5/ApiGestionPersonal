@@ -4,6 +4,7 @@ import com.management.staff.entities.*;
 import com.management.staff.global.exceptions.*;
 import com.management.staff.global.utils.*;
 import com.management.staff.models.QueryPageable;
+import jakarta.mail.MessagingException;
 import java.util.*;
 import org.springframework.data.domain.Page;
 public interface AreaServiceInterface{
@@ -13,7 +14,7 @@ public interface AreaServiceInterface{
     //Pagination
     Page<Area>getAllByPage(QueryPageable queryPageable)throws ListEmptyException;
 //Crear staff desde el area
-    MessageHandler saveNewStaff(short id_area,short id_position,StaffDto dto)throws ResourceNotFoundException, BusinesException;
+    MessageHandler saveNewStaff(short id_area,short id_position,StaffDto dto)throws ResourceNotFoundException, BusinesException, MessagingException;
 //actualizar staff solo position y  direccion
     MessageHandler updateAddressOfStaff(int dni, StaffAddressDto dto)throws ResourceNotFoundException;
     

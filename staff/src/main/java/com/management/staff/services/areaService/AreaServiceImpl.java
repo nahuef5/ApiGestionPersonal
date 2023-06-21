@@ -11,6 +11,8 @@ import com.management.staff.security.entities.Usuario;
 import com.management.staff.security.enums.RoleEnum;
 import com.management.staff.security.repository.*;
 import com.management.staff.security.services.roleService.RoleService;
+import com.management.staff.security.services.securityMail.mailService.MailService;
+import jakarta.mail.MessagingException;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +36,8 @@ public class AreaServiceImpl implements AreaServiceInterface{
     private RoleService roleService;
     @Autowired
     private PasswordEncoder passwordEncoder;
-    
+    @Autowired
+    private MailService mailService;
     //obtiene lista de areas
     @Override
     public List<Area> getAllAreas() throws ListEmptyException {
@@ -46,16 +49,20 @@ public class AreaServiceImpl implements AreaServiceInterface{
     //obtiene el area por id
     @Override
     public Area getAreaById(short id) throws ResourceNotFoundException {
-        Area area=areaRepository.findById(id).orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
+        Area area=areaRepository.findById(id)
+                .orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
         return area;
     }
     //guarda un staff pasamos id de area y de posicion
     @Override
-    public MessageHandler saveNewStaff(short id_area,short id_position,StaffDto dto)throws ResourceNotFoundException, BusinesException{
+    public MessageHandler saveNewStaff(short id_area,short id_position,StaffDto dto)
+            throws ResourceNotFoundException, BusinesException, MessagingException{
         if(staffRepository.existsByDni(dto.getDni()))
             throw new BusinesException(MessageHandler.ALREADY_EXISTS);
-        Area area = areaRepository.findById(id_area).orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
-        Position position= positionRepository.findById(id_position).orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
+        Area area = areaRepository.findById(id_area)
+                .orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
+        Position position= positionRepository.findById(id_position)
+                .orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
         Staff staff= new Staff(
                 dto.getName(),
                 dto.getSurname(),
@@ -74,30 +81,34 @@ public class AreaServiceImpl implements AreaServiceInterface{
                 &&
             !staff.getArea().getArea().equals(AreaEnum.EJECUTIVO)
            ){
-           saveUsuarioByStaff(staff); 
+           saveUsuarioByStaff(staff);
+           mailService.sendWelcom(staff);
+           
         }
         MessageHandler msg = new MessageHandler(MessageHandler.CREATED, HttpStatus.CREATED);
         return msg;
     }
     //Guardar un usuario con un staff
     private Usuario saveUsuarioByStaff(Staff staff){
+        //sustraemos parte del id del staff para luego concatenar a username del user
+        String subStringID = staff.getId_staff().substring(2, 10);        
         //password sera name, area y dni del staff
         String passwordEncode=passwordEncoder.encode
                 (
                     staff.getName()+"_"+
                     staff.getAreaName()+"_"+
-                    staff.getDni()
+                    subStringID
                 );
-        //sustraemos parte del id del staff para luego concatenar a username del user
-        String subStringID = staff.getId_staff().substring(2, 9);
-        //sustraemos parte del dni del staff para luego concatenar a username del user
-        String subStringDNI = String.valueOf(staff.getDni()).substring(6);
         
-        String username=staff.getName()
+        //sustraemos parte del dni del staff para luego concatenar a username del user
+        String subStringDNI = String.valueOf(staff.getDni()).substring(5);
+        
+        String username=
+                staff.getName()
                 +
                 staff.getSurname()
                 +
-                subStringID+subStringDNI;
+                subStringDNI;
         
         Usuario user=new Usuario(
                                 staff.getDni(),
@@ -109,13 +120,13 @@ public class AreaServiceImpl implements AreaServiceInterface{
         roles.add(roleService.getRoleByName(RoleEnum.ROLE_USUARIO).get());
         user.setRoles(roles);
         return usuarioRepository.save(user);
-        
-    }
-    
+    }    
     //utilizamos dtoAddress para actualizar domicilio de staff, pasamos dni para saber cual hay que actualizar
     @Override
-    public MessageHandler updateAddressOfStaff(int dni, StaffAddressDto dto) throws ResourceNotFoundException{
-        Staff staff=staffRepository.findByDni(dni).orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
+    public MessageHandler updateAddressOfStaff(int dni, StaffAddressDto dto)
+            throws ResourceNotFoundException{
+        Staff staff=staffRepository.findByDni(dni)
+                .orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
         staff.setAddress(dto.getAddress());        
         staffRepository.save(staff);
         MessageHandler msg=new MessageHandler(MessageHandler.UPDATED, HttpStatus.OK);
@@ -123,8 +134,10 @@ public class AreaServiceImpl implements AreaServiceInterface{
     }
     //modificamos la posicion de staff, junto con el salario correspondiente al area
     @Override
-    public MessageHandler updatePositionOfStaff(int dni,short id_position, StaffDtoAcenso dto) throws ResourceNotFoundException{
-        Staff staff=staffRepository.findByDni(dni).orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
+    public MessageHandler updatePositionOfStaff(int dni,short id_position, StaffDtoAcenso dto)
+            throws ResourceNotFoundException{
+        Staff staff=staffRepository.findByDni(dni)
+                .orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
         Position position= positionRepository.findById(id_position).get();
         if(staff.getPosition()!= position){
             throw new BusinesException("Ese puesto no corresponde a ese personal.");
@@ -149,7 +162,8 @@ public class AreaServiceImpl implements AreaServiceInterface{
     //eliminar staff y remover de la lista de posicion y area
     @Override
     public MessageHandler deleteStaff(int dni) throws ResourceNotFoundException {
-        Staff staff = staffRepository.findByDni(dni).orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
+        Staff staff = staffRepository.findByDni(dni)
+                .orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
         //sacamos staf de la lista de position para liberar memoria
         Position position=positionRepository.findByPosition(staff.getPosition().getPosition()).get();
         position.getStaff().remove(staff);
@@ -162,7 +176,8 @@ public class AreaServiceImpl implements AreaServiceInterface{
     //obtiene un staff por dni
     @Override
     public Staff getOneByDni(int dni){
-        Staff staff =staffRepository.findByDni(dni).orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
+        Staff staff =staffRepository.findByDni(dni)
+                .orElseThrow(()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
         return staff;
     }
     @Override
