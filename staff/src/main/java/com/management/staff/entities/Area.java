@@ -17,7 +17,6 @@ public class Area {
     @NotNull
     @Enumerated(EnumType.STRING)
     private AreaEnum area;
-    
     @OneToMany(mappedBy="area", cascade=CascadeType.ALL, orphanRemoval=true)
     @JsonIgnoreProperties("areaName")
     private Set<Staff> staff=new HashSet<>();
