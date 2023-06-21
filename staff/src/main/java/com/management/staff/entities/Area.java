@@ -21,7 +21,6 @@ public class Area {
     @OneToMany(mappedBy="area", cascade=CascadeType.ALL, orphanRemoval=true)
     @JsonIgnoreProperties("areaName")
     private Set<Staff> staff=new HashSet<>();
-    
     public Area(AreaEnum area) {
         this.area = area;
     }
