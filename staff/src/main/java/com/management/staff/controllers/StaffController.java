@@ -25,7 +25,6 @@ public class StaffController{
     }
     //Get a staff
     @PreAuthorize("isAuthenticated()")
-    //@PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_ADMINTRAINEE', 'ROLE_USUARIO')")
     @GetMapping("byDni/{dni}/")
     public ResponseEntity<StaffDto> getIndividualAutenticado
         (@PathVariable ("dni") int dni)throws ResourceNotFoundException,Exception{

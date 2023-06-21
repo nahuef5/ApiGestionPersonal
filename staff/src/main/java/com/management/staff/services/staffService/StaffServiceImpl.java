@@ -55,7 +55,9 @@ public class StaffServiceImpl implements StaffServiceInterface{
                 ||
             authentication
                 .getAuthorities().stream().anyMatch(
-                    auth -> auth.getAuthority().equals("ROLE_ADMINTRAINEE"))
+                    auth -> auth.getAuthority().equals("ROLE_ADMINTRAINEE")
+                            ||
+                            auth.getAuthority().equals("ROLE_EJECUTIVO"))
                 ){
             setDto(dni);
             return staffDto;
