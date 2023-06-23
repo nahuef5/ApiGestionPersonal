@@ -1,18 +1,15 @@
 package com.management.staff.services.areaService;
+import com.management.staff.dto.areaDto.AreaDto;
 import com.management.staff.dto.staffDto.*;
 import com.management.staff.entities.*;
 import com.management.staff.global.exceptions.*;
 import com.management.staff.global.utils.*;
-import com.management.staff.models.QueryPageable;
 import jakarta.mail.MessagingException;
 import java.util.*;
-import org.springframework.data.domain.Page;
 public interface AreaServiceInterface{
 //Get por area
-    List<Area>getAllAreas()throws ListEmptyException;
-    Area getAreaById(short id)throws ResourceNotFoundException;
-    //Pagination
-    Page<Area>getAllByPage(QueryPageable queryPageable)throws ListEmptyException;
+    List<AreaDto>getAllAreas()throws ListEmptyException;
+    AreaDto getAreaById(short id)throws ResourceNotFoundException;
 //Crear staff desde el area
     MessageHandler saveNewStaff(short id_area,short id_position,StaffDto dto)throws ResourceNotFoundException, BusinesException, MessagingException;
 //actualizar staff solo position y  direccion

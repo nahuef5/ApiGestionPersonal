@@ -5,7 +5,11 @@ import lombok.*;
 @AllArgsConstructor
 @Getter @Setter
 public class PositionDto{
+    private String name;
     @Min(1000)
     @Max(1000000)
-    private float basicSalary;
+    private double basicSalary;
+    public PositionDto(float basicSalary){
+        this.basicSalary=basicSalary;
+    }
 }

@@ -19,11 +19,12 @@ public class StaffServiceImpl implements StaffServiceInterface{
     @Autowired
     private StaffRepository repository;
     
-    private StaffDto staffDto=new StaffDto();
-    
-    //SETEADOR STAFF VISTA 
-    private void setDto(int dni) throws ResourceNotFoundException{
-        Staff staff = repository.findByDni(dni).orElseThrow(()-> new ResourceNotFoundException(MessageHandler.NOT_FOUD));                
+    private Staff returnStaff(int dni){
+        Staff staff = repository.findByDni(dni)
+                .orElseThrow(()-> new ResourceNotFoundException(MessageHandler.NOT_FOUD));                
+        return staff;
+    }
+    private StaffDto convertToStaffDto(Staff staff){
         StaffDto dto=new StaffDto(
                     staff.getName(),
                     staff.getSurname(),
@@ -38,7 +39,7 @@ public class StaffServiceImpl implements StaffServiceInterface{
                     staff.getGrossSalary(),
                     staff.getNetSalary()
                     );
-            this.staffDto=dto;
+        return dto;
     }
     //obtener dni desde el objeto autenticado
     private int getDniFromAuthentication(Authentication authentication) {
@@ -59,8 +60,8 @@ public class StaffServiceImpl implements StaffServiceInterface{
                             ||
                             auth.getAuthority().equals("ROLE_EJECUTIVO"))
                 ){
-            setDto(dni);
-            return staffDto;
+            
+            return convertToStaffDto(returnStaff(dni));
         }
         throw new Exception("No tiene permitido ver los datos de ese personal");
     }
@@ -78,7 +79,7 @@ public class StaffServiceImpl implements StaffServiceInterface{
     //modificar sueldo
     @Override
     public void setGrossSalary(GrossSalaryStaffDto dto, int dni){
-        Staff staff=repository.findByDni(dni).get();
+        Staff staff = returnStaff(dni); 
         
         double auxGross=staff.getBasicSalary();
         double presentismo=staff.getBasicSalary()*Salary.PRESENTEEISM;
@@ -93,7 +94,7 @@ public class StaffServiceImpl implements StaffServiceInterface{
     }
     @Override
     public void setNetSalary(GrossSalaryStaffDto dto, int dni){
-        Staff staff=repository.findByDni(dni).get();
+        Staff staff = returnStaff(dni); 
         double auxNet=staff.getGrossSalary();
         
         if(dto.isAfiliado())
@@ -106,10 +107,7 @@ public class StaffServiceImpl implements StaffServiceInterface{
     }        
     @Override
     public MessageHandler updateStaffSalary(GrossSalaryStaffDto dto, int dni)throws ResourceNotFoundException{
-        Staff staff=repository.findByDni(dni)
-                .orElseThrow(
-                        ()->new ResourceNotFoundException(MessageHandler.NOT_FOUD)
-                );
+        Staff staff = returnStaff(dni); 
         setGrossSalary(dto, dni);
         System.out.println(staff.getGrossSalary());
         setNetSalary(dto, dni);

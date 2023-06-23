@@ -18,9 +18,15 @@ public class StaffController{
     @Autowired
     StaffServiceImpl service;
     //Get all staff
+    //se traera por position
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_ADMINTRAINEE', 'ROLE_EJECUTIVO')")
-    @GetMapping("allByPagination")
-    public ResponseEntity<Page<Staff>> getAll(QueryPageable queryPageable){
+    @GetMapping("allStaffs-ByPosition")
+    public ResponseEntity<Page<Staff>> getAllByPosition(QueryPageable queryPageable){
+        return ResponseEntity.ok(service.getAllStaffs(queryPageable));
+    }
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_ADMINTRAINEE', 'ROLE_EJECUTIVO')")
+    @GetMapping("allStaffs-ByArea")
+    public ResponseEntity<Page<Staff>> getAllByArea(QueryPageable queryPageable){
         return ResponseEntity.ok(service.getAllStaffs(queryPageable));
     }
     //Get a staff

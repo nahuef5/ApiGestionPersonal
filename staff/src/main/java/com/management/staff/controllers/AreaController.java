@@ -1,16 +1,14 @@
 package com.management.staff.controllers;
+import com.management.staff.dto.areaDto.AreaDto;
 import com.management.staff.dto.staffDto.*;
-import com.management.staff.entities.Area;
 import com.management.staff.global.exceptions.*;
 import com.management.staff.global.utils.*;
 import com.management.staff.global.utils.validators.DateValidator;
-import com.management.staff.models.QueryPageable;
 import com.management.staff.services.areaService.AreaServiceImpl;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -64,17 +62,12 @@ public class AreaController{
 //AREA
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_ADMINTRAINEE', 'ROLE_USUARIO')")
     @GetMapping("allAreas/")
-    public ResponseEntity<List<Area>>getAllAreas(){
+    public ResponseEntity<List<AreaDto>>getAllAreas(){
         return ResponseEntity.ok().body(areaServiceImpl.getAllAreas());
     }
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_ADMINTRAINEE', 'USUARIO')")
     @GetMapping("areaById/{id_area}/")
-    public ResponseEntity<Area>getAreaById(@PathVariable("id_area")short id_area){
+    public ResponseEntity<AreaDto>getAreaById(@PathVariable("id_area")short id_area){
         return ResponseEntity.ok().body(areaServiceImpl.getAreaById(id_area));
-    }
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_ADMINTRAINEE', 'USUARIO')")
-    @GetMapping("")
-    public ResponseEntity<Page<Area>> getAll(QueryPageable queryPageable){
-        return ResponseEntity.ok(areaServiceImpl.getAllByPage(queryPageable));
     }
 }
