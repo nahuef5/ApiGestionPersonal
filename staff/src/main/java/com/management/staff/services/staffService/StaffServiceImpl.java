@@ -6,6 +6,8 @@ import com.management.staff.global.utils.MessageHandler;
 import com.management.staff.models.*;
 import com.management.staff.repository.StaffRepository;
 import com.management.staff.security.services.userService.UserDetailsImpl;
+import java.time.LocalDate;
+import java.time.Period;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,23 @@ public class StaffServiceImpl implements StaffServiceInterface{
         Staff staff = repository.findByDni(dni)
                 .orElseThrow(()-> new ResourceNotFoundException(MessageHandler.NOT_FOUD));                
         return staff;
+    }
+    private int getAntiquity(Staff staff){
+        //tomamos las fechas de contrato y la del momento de act
+        LocalDate contract=staff.getContractStart();
+        LocalDate now= LocalDate.now();
+        
+        Period period=Period.between(contract, now);
+        
+        int antiquity=period.getYears();
+        
+        if(period.getYears() == 0 && period.getMonths()>=6){
+            antiquity++;
+        }
+        else if(period.getYears() != 0 && period.getMonths()>=6){
+            antiquity++;
+        }
+        return antiquity;
     }
     private StaffDto convertToStaffDto(Staff staff){
         StaffDto dto=new StaffDto(
@@ -80,10 +99,10 @@ public class StaffServiceImpl implements StaffServiceInterface{
     @Override
     public void setGrossSalary(GrossSalaryStaffDto dto, int dni){
         Staff staff = returnStaff(dni); 
-        
+        int q = getAntiquity(staff);
         double auxGross=staff.getBasicSalary();
         double presentismo=staff.getBasicSalary()*Salary.PRESENTEEISM;
-        double antiguedad=staff.getBasicSalary()*(Salary.ANTIQUITY*dto.getQuantityAntiquity());
+        double antiguedad=staff.getBasicSalary()*(Salary.ANTIQUITY*q);
         double extras=Salary.valueExtraHours(staff.getBasicSalary())*dto.getQuantityExtraHours();
         
         if(dto.isPresenteeism())

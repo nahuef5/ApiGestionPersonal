@@ -37,11 +37,6 @@ public class PositionServiceImpl implements PositionServiceInterface{
     }
 
     @Override
-    public Position getPositionById(short id_position) throws ResourceNotFoundException {
-        Position position = returnPosition(id_position);
-        return position;
-    }
-    @Override
     public MessageHandler updateSalaryByPosition(short id_position, PositionDto dto) throws ResourceNotFoundException {
         double auxBasicSalary=dto.getBasicSalary();
         Position position = returnPosition(id_position);
