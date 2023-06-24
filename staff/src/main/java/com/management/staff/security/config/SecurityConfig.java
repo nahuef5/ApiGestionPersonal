@@ -25,6 +25,23 @@ public class SecurityConfig{
     @Autowired
     private JwtAuthenticationFilter authenticationFilter;
     AuthenticationManager authenticationManager;
+    
+    private final String[] PATHS={
+        "/v3/api-docs/**",
+        "/api-docs/**",
+        "/swagger-ui/**",
+        "/swagger-ui.html",
+        "/swagger-ui/index.html",
+        "/swagger-ui-custom.html" ,
+    };
+    private final String[] PERMIT_ALL={
+        "/",
+        "/email/",
+        "/email/**",
+        "/refresh-token",
+        "/reg-executive",
+        "/reg-admin"
+    };
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
         AuthenticationManagerBuilder builder=httpSecurity.getSharedObject(AuthenticationManagerBuilder.class);
@@ -36,14 +53,10 @@ public class SecurityConfig{
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         httpSecurity
                 .authorizeHttpRequests()
-                .requestMatchers(
-                        "/",
-                        "/email",
-                        "/email/**",
-                        "/refresh-token",
-                        "/register",
-                        "/reg-admin"
-                ).permitAll()
+                .requestMatchers(PERMIT_ALL)
+                .permitAll()
+                .requestMatchers(PATHS)
+                .permitAll()
         .anyRequest().authenticated();
         httpSecurity.exceptionHandling().authenticationEntryPoint(jwtEntryPoint);
         httpSecurity.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);

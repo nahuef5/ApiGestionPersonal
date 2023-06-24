@@ -13,6 +13,7 @@ import com.management.staff.security.services.roleService.RoleService;
 import java.text.ParseException;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,7 +44,7 @@ public class UsuarioService implements CreateUserInterface{
     //METHODS CREATE
 
     @Override
-    public Usuario createAdmin(NewUsuarioDto dto) throws BusinesException {
+    public MessageHandler createAdmin(NewUsuarioDto dto) throws BusinesException {
         if(existsUser(dto))
             throw new BusinesException(MessageHandler.ALREADY_EXISTS);
         if(!dto.getPassword().equals(dto.getPasswordConfirm()))
@@ -60,11 +61,12 @@ public class UsuarioService implements CreateUserInterface{
         roles.add(roleService.getRoleByName(RoleEnum.ROLE_ADMINTRAINEE).get());
         roles.add(roleService.getRoleByName(RoleEnum.ROLE_ADMIN).get());
         user.setRoles(roles);
-        return usuarioRepository.save(user);
+        usuarioRepository.save(user);
+        return new MessageHandler("Usuario administrador creado", HttpStatus.CREATED);
     }
 
     @Override
-    public Usuario createTrainee(NewUsuarioDto dto) throws BusinesException {
+    public MessageHandler createTrainee(NewUsuarioDto dto) throws BusinesException {
         if(existsUser(dto))
             throw new BusinesException(MessageHandler.ALREADY_EXISTS);
         if(!dto.getPassword().equals(dto.getPasswordConfirm()))
@@ -81,10 +83,11 @@ public class UsuarioService implements CreateUserInterface{
         roles.add(roleService.getRoleByName(RoleEnum.ROLE_USUARIO).get());
         roles.add(roleService.getRoleByName(RoleEnum.ROLE_ADMINTRAINEE).get());
         user.setRoles(roles);
-        return usuarioRepository.save(user);
+        usuarioRepository.save(user);
+        return new MessageHandler("Usuario trainee creado", HttpStatus.CREATED);
     }
     @Override
-    public Usuario createUserEjecutivo(NewUsuarioDto dto) throws BusinesException {
+    public MessageHandler createUserEjecutivo(NewUsuarioDto dto) throws BusinesException {
         if(existsUser(dto))
             throw new BusinesException(MessageHandler.ALREADY_EXISTS);
         if(!dto.getPassword().equals(dto.getPasswordConfirm()))
@@ -100,7 +103,8 @@ public class UsuarioService implements CreateUserInterface{
         List<Role> roles = new ArrayList<>();
         roles.add(roleService.getRoleByName(RoleEnum.ROLE_EJECUTIVO).get());
         user.setRoles(roles);
-        return usuarioRepository.save(user);
+        usuarioRepository.save(user);
+        return new MessageHandler("Usuario ejecutivo creado", HttpStatus.CREATED);
     }
 
     //LOGIN

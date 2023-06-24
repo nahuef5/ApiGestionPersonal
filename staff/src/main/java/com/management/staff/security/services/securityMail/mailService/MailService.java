@@ -86,8 +86,7 @@ public class MailService{
         usuarioRepository.save(user);
         sendEmail(dto);
         
-        MessageHandler message=new MessageHandler(MessageHandler.RESET_PASSWORD, HttpStatus.OK);
-        return message;
+        return new MessageHandler(MessageHandler.RESET_PASSWORD, HttpStatus.OK);
     }
     public MessageHandler changePassword(ChangePasswordDto dto){
         Usuario user= getUsuarioByForgottenPassword(dto.getForgottenPassword());
@@ -99,8 +98,7 @@ public class MailService{
         user.setPassword(newPassword);
         user.setForgottenPassword(null);
         usuarioRepository.save(user);
-        MessageHandler message= new MessageHandler(MessageHandler.PASSWORD_CHANGED, HttpStatus.CREATED);
-        return message;
+        return new MessageHandler(MessageHandler.PASSWORD_CHANGED, HttpStatus.CREATED);
     }
     //send staff
     private final String WELCOME="Bienvenid@";

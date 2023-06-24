@@ -6,7 +6,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.0.6</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
     <groupId>com.management</groupId>
     <artifactId>staff</artifactId>
@@ -62,11 +62,13 @@
             <artifactId>spring-context</artifactId>
             <type>jar</type>
         </dependency>
-        
+        <!--Mail-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
+        
+        <!--Thymeleaf-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -98,6 +100,12 @@
             <artifactId>nimbus-jose-jwt</artifactId>
             <version>9.31</version>
         </dependency>
+        <!--SWAGGER-->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.1.0</version>
+        </dependency>
 
     </dependencies>
 
@@ -117,5 +125,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
