@@ -1,5 +1,6 @@
 package com.management.staff.entities;
 import com.fasterxml.jackson.annotation.*;
+import com.management.staff.models.Address;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
@@ -22,8 +23,10 @@ public class Staff{
     private String name;
     @NotNull
     private String surname;
+    @Transient
+    private Address address;
     @NotNull
-    private String address;
+    private String addressCoordinates;
     @NotNull
     private int dni;
     @NotNull
@@ -64,7 +67,7 @@ public class Staff{
             return area.getArea().name();
         return null;
     }
-    public Staff(String name, String surname, String address, int dni, LocalDate born, Area area, Position position, LocalDate contractStart, String email) {
+    public Staff(String name, String surname, Address address, int dni, LocalDate born, Area area, Position position, LocalDate contractStart, String email) {
         this.name = name;
         this.surname = surname;
         this.address = address;
@@ -77,8 +80,11 @@ public class Staff{
         this.basicSalary=position.getBasicSalary();
     }
     //Unicos atributos que se pueden modificar
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
+    }
+    public void setAddressCoordinates(String addressCoordinates) {
+        this.addressCoordinates = addressCoordinates;
     }
     public void setPosition(Position position) {
         this.position = position;

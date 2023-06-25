@@ -1,17 +1,21 @@
 package com.management.staff.services.areaService;
+import com.google.maps.errors.ApiException;
 import com.management.staff.dto.areaDto.AreaDto;
 import com.management.staff.dto.staffDto.*;
 import com.management.staff.entities.*;
 import com.management.staff.enums.AreaEnum;
 import com.management.staff.global.exceptions.*;
 import com.management.staff.global.utils.*;
+import com.management.staff.models.Address;
 import com.management.staff.repository.*;
 import com.management.staff.security.entities.*;
 import com.management.staff.security.enums.RoleEnum;
 import com.management.staff.security.repository.*;
 import com.management.staff.security.services.roleService.RoleService;
 import com.management.staff.security.services.securityMail.mailService.MailService;
+import com.management.staff.services.externalServices.GoogleMapsServices;
 import jakarta.mail.MessagingException;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +40,8 @@ public class AreaServiceImpl implements AreaServiceInterface{
     private PasswordEncoder passwordEncoder;
     @Autowired
     private MailService mailService;
+    @Autowired
+    private GoogleMapsServices googleMapsServices;
     
     private Area returnArea(short id_area){
         Area area= areaRepository.findById(id_area).orElseThrow(
@@ -125,7 +131,8 @@ public class AreaServiceImpl implements AreaServiceInterface{
     //guarda un staff pasamos id de area y de posicion
     @Override
     public MessageHandler saveNewStaff(short id_area,short id_position,StaffDto dto)
-            throws ResourceNotFoundException, BusinesException, MessagingException{
+            throws ResourceNotFoundException, BusinesException, MessagingException,
+            ApiException, InterruptedException, IOException{
         
         if(staffRepository.existsByDni(dto.getDni()))
             throw new BusinesException(MessageHandler.ALREADY_EXISTS);
@@ -143,7 +150,8 @@ public class AreaServiceImpl implements AreaServiceInterface{
                 position,
                 dto.getContractStart(),
                 dto.getEmail());
-        
+        //asignamos las coordenadas del objeto direccion del staff y guardamos en ddbb
+        staff.setAddressCoordinates(googleMapsServices.getCoordinates(dto.getAddress()).toString());
         staffRepository.save(staff);
         //va despues o no se podra crear por el uuid
         if(
@@ -160,9 +168,10 @@ public class AreaServiceImpl implements AreaServiceInterface{
         
     //utilizamos dtoAddress para actualizar domicilio de staff, pasamos dni para saber cual hay que actualizar
     @Override
-    public MessageHandler updateAddressOfStaff(int dni, StaffAddressDto dto)throws ResourceNotFoundException{
+    public MessageHandler updateAddressOfStaff(int dni, Address address)
+            throws ResourceNotFoundException,ApiException, InterruptedException, IOException{
         Staff staff=returnStaff(dni);
-        staff.setAddress(dto.getAddress());        
+        staff.setAddressCoordinates(address.toString());
         staffRepository.save(staff);
         
         MessageHandler msg=new MessageHandler(MessageHandler.UPDATED, HttpStatus.OK);

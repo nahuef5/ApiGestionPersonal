@@ -61,7 +61,11 @@ public class GlobalException {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new MessageHandler(e.getMessage(),HttpStatus.NOT_FOUND));
     }
-
+    @ExceptionHandler(MapsException.class)
+    public ResponseEntity<MessageHandler>throwMapsException(MapsException e){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                new MessageHandler(e.getMessage(), HttpStatus.CONFLICT));
+    }
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<MessageHandler> handleAccessDeniedException(AccessDeniedException e){
         return ResponseEntity.status(HttpStatus.FORBIDDEN)

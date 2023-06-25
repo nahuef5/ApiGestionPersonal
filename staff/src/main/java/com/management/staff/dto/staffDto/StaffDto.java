@@ -1,5 +1,6 @@
 package com.management.staff.dto.staffDto;
 import com.management.staff.global.utils.validators.ValidDate;
+import com.management.staff.models.Address;
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 import lombok.*;
@@ -11,10 +12,7 @@ public class StaffDto{
     private String name;
     @Size(min = 3, max = 10, message = "El apellido del personal debe tener como minimo 3 caracteres y maximo 15.")
     private String surname;
-    @NotBlank
-    @NotEmpty
-    @Pattern(regexp="^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{1,25}( [0-9]{1,5})?$")
-    private String address;
+    private Address address;
     @Min(20000000)
     @Digits(integer=8, fraction=0)
     private int dni;
@@ -30,7 +28,7 @@ public class StaffDto{
     private double grossSalary;
     private double netSalary;
     //Para crear objetos de entidad
-    public StaffDto(String name, String surname, String address, int dni, LocalDate born, String position, LocalDate contractStart,String email) {
+    public StaffDto(String name, String surname, Address address, int dni, LocalDate born, String position, LocalDate contractStart,String email) {
         this.name = name;
         this.surname = surname;
         this.address = address;

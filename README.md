@@ -6,6 +6,7 @@
  Crea, actualiza y elimina (luego de confirmar mediante una url de redireccionamiento) un personal. Areas y Puestos 
  se crean con la primera ejecución ya que provienen de clases enum. Implementa el olvido de contraseña y el refresh token. 
  Crea un usuario a la hora de crear un staff, excepto que pertenezca al area RRHH o EJECUTIVO y se envia un mail dando la bienvenida a la empresa al personal con el username y password para que ingrese con esas credenciales. El staff solo puede ver su informacion, pero no la de otros staff a excepcion del rol ADMINTRAINEE. El area se muestra desed un dto el cual muestra id, nombre, total de staff que lo conforman, total de sueldo basico por area, y total de sueldo bruto. Documentación con swagger.
+ Consumo de google maps para guardar la direccion por coordenadas del staff en la base de datos.
 </h6>
 </div>
 
@@ -31,10 +32,12 @@
 
 - Swagger
 
+- API Google Maps
+
 <h3 align="left">Proximas implementaciones y mejoras:</h3>
 
 <p>Mejorar métodos creación puestos ejecutivos, 
- mejorar abstracción de clases, consumo de API</p>
+ mejorar abstracción de clases</p>
 
 <h3 align="left">Orden de ramas (según se implementan las mejoras):</h3>
 
@@ -49,3 +52,4 @@
 - [Area_2.0](#Area_2.0)
 - [Fechas](#Fechas)
 - [Swagger](#Swagger)
+- [GoogleMaps](#GoogleMaps)

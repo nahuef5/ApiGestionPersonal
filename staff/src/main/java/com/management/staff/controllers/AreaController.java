@@ -1,13 +1,16 @@
 package com.management.staff.controllers;
+import com.google.maps.errors.ApiException;
 import com.management.staff.dto.areaDto.AreaDto;
 import com.management.staff.dto.staffDto.*;
 import com.management.staff.global.exceptions.*;
 import com.management.staff.global.utils.*;
 import com.management.staff.global.utils.validators.DateValidator;
+import com.management.staff.models.Address;
 import com.management.staff.services.areaService.AreaServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -29,7 +32,8 @@ public class AreaController{
 //STAFF
     @Operation(
             summary = "Create staff",
-            description = "Crea un staff, se le pasa como primer pathvariable el id del area, como segundo el del puesto."
+            description = "Crea un staff, se le pasa como primer pathvariable el id del area, como segundo el del puesto. "
+                    + "En el body del dto se le pasa el objeto address para generar las coordenadas"
                     + "ADMIN"
     )
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -38,20 +42,23 @@ public class AreaController{
         @PathVariable("id_area")short id_area,
         @PathVariable("id_position")short id_position,
         @Valid @RequestBody StaffDto dto)
-            throws ResourceNotFoundException,BusinesException, MessagingException{
+            throws ResourceNotFoundException,BusinesException,MessagingException,
+            ApiException, InterruptedException, IOException{
         
         return ResponseEntity.status(HttpStatus.CREATED)
                     .body(areaServiceImpl.saveNewStaff(id_area, id_position, dto));
     }
     @Operation(
             summary = "Update staff address",
-            description = "Actualiza la direccion de un staff pasando como pathvariable el dni. ADMIN"
+            description = "Actualiza la direccion de un staff pasando como pathvariable el dni y en el body el modelo address, "
+                    + "para que se guarde las coordenadas en la base de datos. ADMIN"
     )
     @PreAuthorize("hasAuthority('ROLE_ADMINTRAINEE')")
     @PutMapping("update/{dni}/")
     public ResponseEntity<MessageHandler>updateAddressStaff(@PathVariable("dni")int dni,
-            @Valid @RequestBody StaffAddressDto dto){
-        return ResponseEntity.ok().body(areaServiceImpl.updateAddressOfStaff(dni, dto));
+            @Valid @RequestBody Address address) throws ResourceNotFoundException,ApiException,
+            InterruptedException, IOException{
+        return ResponseEntity.ok().body(areaServiceImpl.updateAddressOfStaff(dni, address));
     }
     @Operation(
             summary = "Update staff position",
