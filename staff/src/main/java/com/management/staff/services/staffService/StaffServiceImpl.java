@@ -1,4 +1,6 @@
 package com.management.staff.services.staffService;
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.LatLng;
 import com.management.staff.dto.staffDto.*;
 import com.management.staff.entities.Staff;
 import com.management.staff.global.exceptions.*;
@@ -6,6 +8,8 @@ import com.management.staff.global.utils.MessageHandler;
 import com.management.staff.models.*;
 import com.management.staff.repository.StaffRepository;
 import com.management.staff.security.services.userService.UserDetailsImpl;
+import com.management.staff.services.externalServices.GoogleMapsServices;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class StaffServiceImpl implements StaffServiceInterface{
     @Autowired
     private StaffRepository repository;
-    
+    @Autowired
+    private GoogleMapsServices googleMapsServices;
     private Staff returnStaff(int dni){
         Staff staff = repository.findByDni(dni)
                 .orElseThrow(()-> new ResourceNotFoundException(MessageHandler.NOT_FOUD));                
@@ -43,11 +48,21 @@ public class StaffServiceImpl implements StaffServiceInterface{
         }
         return antiquity;
     }
-    private StaffDto convertToStaffDto(Staff staff){
-        StaffDto dto=new StaffDto(
+    //traer direccion desde coordenadas guardada en ddbb
+    private String getAddressFromCoordinates(Staff staff)
+            throws ApiException, InterruptedException, IOException{
+        String coordinates= staff.getAddressCoordinates();
+        LatLng address = new LatLng(
+                Double.parseDouble(coordinates.split(",")[0]),
+                Double.parseDouble(coordinates.split(",")[1]));
+        return googleMapsServices.getAddressFromCoordinates(address);
+    }
+    private StaffFromDto convertToStaffFromDto(Staff staff)
+            throws ApiException, InterruptedException, IOException{
+        StaffFromDto dto=new StaffFromDto(
                     staff.getName(),
                     staff.getSurname(),
-                    staff.getAddress(),
+                    getAddressFromCoordinates(staff),
                     staff.getDni(),
                     staff.getBorn(),
                     staff.getArea().getArea().name(),
@@ -66,7 +81,7 @@ public class StaffServiceImpl implements StaffServiceInterface{
         return userDetails.getDni();
     }
     @Override
-    public StaffDto getOneStaff(int dni)throws ResourceNotFoundException, Exception {
+    public StaffFromDto getOneStaff(int dni)throws ResourceNotFoundException, Exception {
         //obtengo el usuario autenticado
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         //podra acceder al recurso solo si comparte dni o si tiene rol admintrainee
@@ -80,7 +95,7 @@ public class StaffServiceImpl implements StaffServiceInterface{
                             auth.getAuthority().equals("ROLE_EJECUTIVO"))
                 ){
             
-            return convertToStaffDto(returnStaff(dni));
+            return convertToStaffFromDto(returnStaff(dni));
         }
         throw new Exception("No tiene permitido ver los datos de ese personal");
     }

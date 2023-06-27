@@ -10,7 +10,7 @@ public interface StaffServiceInterface{
     //Pagination con todo staff
     Page<Staff> getAllStaffs(QueryPageable queryPageable)throws ListEmptyException;
     //traer un staff con todos los datos
-    StaffDto getOneStaff(int dni)throws ResourceNotFoundException, Exception;
+    StaffFromDto getOneStaff(int dni)throws ResourceNotFoundException, Exception;
     //modificar sueldo bruto y neto desde Dto se pasara dni para modificar por staff
     void setGrossSalary(GrossSalaryStaffDto dto, int dni);
     void setNetSalary(GrossSalaryStaffDto dto, int dni);

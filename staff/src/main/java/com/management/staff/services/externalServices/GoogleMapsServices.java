@@ -27,9 +27,20 @@ public class GoogleMapsServices{
                 +this.province+", "
                 +this.country;
         GeocodingResult[] results = GeocodingApi.geocode(geoApiContext, completAddress).await();
-        if (results.length > 0) {
+        if(results.length > 0) {
             return results[0].geometry.location;
         }
+        else{
         throw new MapsException("No se encontraron coordenadas para la dirección proporcionada.");
+        }
+    }
+    public String getAddressFromCoordinates(LatLng coordinates)throws ApiException, InterruptedException, IOException{
+        GeocodingResult[] results= GeocodingApi.reverseGeocode(geoApiContext, coordinates).await();
+        if(results.length > 0) {
+            return results[0].formattedAddress;
+        }
+        else{
+            throw new MapsException("No se encontró la direccion desde esas coordenadas.");
+        }
     }
 }

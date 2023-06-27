@@ -44,7 +44,7 @@ public class StaffController{
     )
     @PreAuthorize("isAuthenticated()")
     @GetMapping("byDni/{dni}/")
-    public ResponseEntity<StaffDto>getOne(@PathVariable ("dni") int dni)
+    public ResponseEntity<StaffFromDto>getOne(@PathVariable ("dni") int dni)
             throws ResourceNotFoundException,Exception{
         return ResponseEntity.status(HttpStatus.FOUND).body(service.getOneStaff(dni));  
     }
