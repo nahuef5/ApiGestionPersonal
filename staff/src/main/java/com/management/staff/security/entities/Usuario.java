@@ -24,8 +24,8 @@ public class Usuario {
     @NotNull
     @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(
-            name="rol_de_usuario",
-            joinColumns=@JoinColumn(name="id_user"),
+            name="rol_user",
+            joinColumns=@JoinColumn(name="dni"),
             inverseJoinColumns=@JoinColumn(name="id_rol")
     )
     private List<Role> roles= new ArrayList<>();

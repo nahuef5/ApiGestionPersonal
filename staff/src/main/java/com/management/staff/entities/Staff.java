@@ -7,11 +7,8 @@ import java.time.LocalDate;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 @Entity
-@Table(name="personal_empresa")
 @Getter
 @NoArgsConstructor
-//La idea es crear el trabajador desde el enlace del area, donde se pasara el
-//puesto
 public class Staff{
     @Id
     @GeneratedValue(generator = "uuid2")

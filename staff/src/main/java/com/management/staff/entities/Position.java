@@ -7,7 +7,6 @@ import jakarta.validation.constraints.NotNull;
 import java.util.*;
 import lombok.*;
 @Entity
-@Table(name="puestos_empresa")
 @NoArgsConstructor
 @Getter
 public class Position {
@@ -21,11 +20,10 @@ public class Position {
     @OneToMany(mappedBy="position", cascade= CascadeType.ALL, orphanRemoval=true)
     @JsonIgnoreProperties("positionName")
     private Set<Staff> staff= new HashSet<>();
-    @NotNull
     private double basicSalary;
     public Position(PositionEnum position) {
         this.position = position;
-        this.basicSalary=1000;
+        this.basicSalary=0;
     }
     public void setBasicSalary(double basicSalary)throws BusinesException{
         double min=this.basicSalary;

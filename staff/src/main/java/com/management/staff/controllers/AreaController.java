@@ -1,6 +1,7 @@
 package com.management.staff.controllers;
 import com.google.maps.errors.ApiException;
 import com.management.staff.dto.areaDto.AreaDto;
+import com.management.staff.dto.areaDto.BonusDto;
 import com.management.staff.dto.staffDto.*;
 import com.management.staff.global.exceptions.*;
 import com.management.staff.global.utils.*;
@@ -116,5 +117,10 @@ public class AreaController{
     @GetMapping("areaById/{id_area}/")
     public ResponseEntity<AreaDto>getAreaById(@PathVariable("id_area")short id_area){
         return ResponseEntity.ok().body(areaServiceImpl.getAreaById(id_area));
+    }
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PutMapping("bonus/")
+    public ResponseEntity<MessageHandler>updateBonus(@RequestBody BonusDto dto){
+        return ResponseEntity.ok().body(areaServiceImpl.updateBonus(dto));
     }
 }

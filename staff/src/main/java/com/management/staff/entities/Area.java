@@ -5,9 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import java.util.*;
 import lombok.*;
-//Esta entidad solo podra crearse desde los enums. No se podran eliminar o crear
 @Entity
-@Table(name="areas_empresa")
 @Getter
 @NoArgsConstructor
 public class Area {
@@ -17,10 +15,15 @@ public class Area {
     @NotNull
     @Enumerated(EnumType.STRING)
     private AreaEnum area;
+    private float bonus;
     @OneToMany(mappedBy="area", cascade=CascadeType.ALL, orphanRemoval=true)
     @JsonIgnoreProperties("areaName")
     private Set<Staff> staff=new HashSet<>();
     public Area(AreaEnum area) {
         this.area = area;
+        this.bonus=0;
+    }
+    public void setBonus(float bonus){
+        this.bonus = bonus;
     }
 }

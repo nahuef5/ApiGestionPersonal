@@ -3,11 +3,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class AreaDto {
+public class BonusDto{
     private short id_area;
-    private String area;
-    private int allStaff;
-    private double totalBasicSalarys;
-    private double totalGrossSalary;
     private float bonus;
 }

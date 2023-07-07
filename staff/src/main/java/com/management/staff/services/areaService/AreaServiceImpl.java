@@ -1,6 +1,7 @@
 package com.management.staff.services.areaService;
 import com.google.maps.errors.ApiException;
 import com.management.staff.dto.areaDto.AreaDto;
+import com.management.staff.dto.areaDto.BonusDto;
 import com.management.staff.dto.staffDto.*;
 import com.management.staff.entities.*;
 import com.management.staff.enums.AreaEnum;
@@ -78,6 +79,7 @@ public class AreaServiceImpl implements AreaServiceInterface{
         dto.setAllStaff(getTotalStaff(area.getStaff()));
         dto.setTotalBasicSalarys(getTotalBasic(area.getStaff()));
         dto.setTotalGrossSalary(getTotalGross(area.getStaff()));
+        dto.setBonus(area.getBonus());
         return dto;
     }
     //Guardar un usuario con un staff
@@ -257,5 +259,22 @@ public class AreaServiceImpl implements AreaServiceInterface{
         staff.setAddressCoordinates(googleMapsServices.getCoordinates(dto.getAddress()).toString());
         staffRepository.save(staff);
         return new MessageHandler(MessageHandler.CREATED, HttpStatus.CREATED);
+    }
+    private boolean validBonus(BonusDto dto){
+        float bonus=dto.getBonus();
+        return (bonus<0.6 && bonus>0);
+    }
+    public MessageHandler updateBonus(BonusDto dto){
+        Area area = areaRepository
+                .findById(
+                        dto.getId_area()
+                )
+                .orElseThrow(
+                ()-> new ResourceNotFoundException(MessageHandler.NOT_FOUD)
+                );
+        if(!validBonus(dto))
+            throw new BusinesException("Monto de bonificación inválido.");
+        area.setBonus(dto.getBonus());
+        return new MessageHandler(MessageHandler.UPDATED,HttpStatus.OK);
     }
 }

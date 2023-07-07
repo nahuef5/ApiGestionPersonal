@@ -7,6 +7,7 @@ import com.management.staff.global.exceptions.*;
 import com.management.staff.global.utils.MessageHandler;
 import com.management.staff.models.*;
 import com.management.staff.repository.StaffRepository;
+import com.management.staff.security.repository.UsuarioRepository;
 import com.management.staff.security.services.userService.UserDetailsImpl;
 import com.management.staff.services.externalServices.GoogleMapsServices;
 import java.io.IOException;
@@ -26,6 +27,8 @@ public class StaffServiceImpl implements StaffServiceInterface{
     private StaffRepository repository;
     @Autowired
     private GoogleMapsServices googleMapsServices;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
     private Staff returnStaff(int dni){
         Staff staff = repository.findByDni(dni)
                 .orElseThrow(()-> new ResourceNotFoundException(MessageHandler.NOT_FOUD));                
@@ -59,6 +62,7 @@ public class StaffServiceImpl implements StaffServiceInterface{
     }
     private StaffFromDto convertToStaffFromDto(Staff staff)
             throws ApiException, InterruptedException, IOException{
+        String email=usuarioRepository.findByDni(staff.getDni()).get().getEmail();
         StaffFromDto dto=new StaffFromDto(
                     staff.getName(),
                     staff.getSurname(),
@@ -68,7 +72,7 @@ public class StaffServiceImpl implements StaffServiceInterface{
                     staff.getArea().getArea().name(),
                     staff.getPosition().getPosition().name(),
                     staff.getContractStart(),
-                    staff.getEmail(),
+                    email,
                     staff.getBasicSalary(),
                     staff.getGrossSalary(),
                     staff.getNetSalary()
@@ -120,10 +124,13 @@ public class StaffServiceImpl implements StaffServiceInterface{
         double antiguedad=staff.getBasicSalary()*(Salary.ANTIQUITY*q);
         double extras=Salary.valueExtraHours(staff.getBasicSalary())*dto.getQuantityExtraHours();
         
+        double bonusByArea=staff.getArea().getBonus();
+        double bonus=staff.getBasicSalary()*bonusByArea;
+        
         if(dto.isPresenteeism())
             auxGross += presentismo;
   
-        auxGross += antiguedad + extras;
+        auxGross += antiguedad + extras + bonus;
         staff.setGrossSalary(auxGross);
     }
     @Override
@@ -140,10 +147,8 @@ public class StaffServiceImpl implements StaffServiceInterface{
             staff.setNetSalary(auxNet);
     }        
     @Override
-    public MessageHandler updateStaffSalary(GrossSalaryStaffDto dto, int dni)throws ResourceNotFoundException{
-        Staff staff = returnStaff(dni); 
+    public MessageHandler updateStaffSalary(GrossSalaryStaffDto dto, int dni)throws ResourceNotFoundException{ 
         setGrossSalary(dto, dni);
-        System.out.println(staff.getGrossSalary());
         setNetSalary(dto, dni);
         return new MessageHandler("Sueldo actualizado correctamente",HttpStatus.OK);
     }
