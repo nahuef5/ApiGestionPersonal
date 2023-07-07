@@ -18,7 +18,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 @RestController
-@RequestMapping("/byArea/")
+@RequestMapping("/area/")
 @CrossOrigin(origins="http://localhost:5000/")
 public class AreaController{
     @Autowired
@@ -37,7 +37,7 @@ public class AreaController{
                     + "ADMIN"
     )
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    @PostMapping("{id_area}/{id_position}/")
+    @PostMapping("staff/{id_area}/{id_position}/")
     public ResponseEntity<MessageHandler>saveStaff(
         @PathVariable("id_area")short id_area,
         @PathVariable("id_position")short id_position,
@@ -47,6 +47,16 @@ public class AreaController{
         
         return ResponseEntity.status(HttpStatus.CREATED)
                     .body(areaServiceImpl.saveNewStaff(id_area, id_position, dto));
+    }
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PostMapping("staff/{id_position}/")
+    public ResponseEntity<MessageHandler>saveStaffEjecutivo(
+        @PathVariable("id_position")short id_position,
+        @Valid @RequestBody StaffDto dto)
+            throws ResourceNotFoundException,BusinesException,
+            ApiException, InterruptedException, IOException{
+        return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(areaServiceImpl.saveNewStaffFromEjecutivo(id_position, dto));
     }
     @Operation(
             summary = "Update staff address",

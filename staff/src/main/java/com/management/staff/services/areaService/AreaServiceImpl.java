@@ -42,7 +42,7 @@ public class AreaServiceImpl implements AreaServiceInterface{
     private MailService mailService;
     @Autowired
     private GoogleMapsServices googleMapsServices;
-    
+    private final short id=1;
     private Area returnArea(short id_area){
         Area area= areaRepository.findById(id_area).orElseThrow(
                 ()->new ResourceNotFoundException(MessageHandler.NOT_FOUD));
@@ -88,7 +88,7 @@ public class AreaServiceImpl implements AreaServiceInterface{
         String passwordEncode=passwordEncoder.encode
                 (
                     staff.getName()+"_"+
-                    staff.getAreaName()+"_"+
+                    staff.getArea().getArea().name()+"_"+
                     subStringID
                 );
         
@@ -136,6 +136,12 @@ public class AreaServiceImpl implements AreaServiceInterface{
         
         if(staffRepository.existsByDni(dto.getDni()))
             throw new BusinesException(MessageHandler.ALREADY_EXISTS);
+        if(id_area==id)
+            throw new BusinesException
+        ("No se puede crear un staff del area de ejecutivo.");
+        if(id_position<=2)
+            throw new BusinesException
+        ("Esos puestos no corresponden al area que se desea asignar al staff.");
         
         Area area =returnArea(id_area);
         Position position= returnPosition(id_position);
@@ -224,5 +230,32 @@ public class AreaServiceImpl implements AreaServiceInterface{
     public Staff getOneByDni(int dni){
         Staff staff=returnStaff(dni);
         return staff;
+    }
+    @Override
+    public MessageHandler saveNewStaffFromEjecutivo(short id_position,StaffDto dto)
+            throws ResourceNotFoundException, BusinesException,
+            ApiException, InterruptedException, IOException{
+
+        if(staffRepository.existsByDni(dto.getDni()))
+            throw new BusinesException(MessageHandler.ALREADY_EXISTS);
+        if(id_position>=3)
+            throw new BusinesException
+        ("No se puede crear un staff de area ejecutiva con puestos diferentes a presidente o accionista.");
+        Area area =returnArea(id);
+        Position position= returnPosition(id_position);
+
+        Staff staff= new Staff(
+                dto.getName(),
+                dto.getSurname(),
+                dto.getAddress(),
+                dto.getDni(),
+                dto.getBorn(),
+                area,
+                position,
+                dto.getContractStart(),
+                dto.getEmail());
+        staff.setAddressCoordinates(googleMapsServices.getCoordinates(dto.getAddress()).toString());
+        staffRepository.save(staff);
+        return new MessageHandler(MessageHandler.CREATED, HttpStatus.CREATED);
     }
 }

@@ -17,6 +17,9 @@ public interface AreaServiceInterface{
     MessageHandler saveNewStaff(short id_area,short id_position,StaffDto dto)
             throws ResourceNotFoundException, BusinesException, MessagingException,
             ApiException, InterruptedException, IOException;
+    MessageHandler saveNewStaffFromEjecutivo(short id_position,StaffDto dto)
+            throws ResourceNotFoundException, BusinesException,
+            ApiException, InterruptedException, IOException;
 //actualizar staff solo position y  direccion
     MessageHandler updateAddressOfStaff(int dni, Address address)
             throws ResourceNotFoundException,ApiException, InterruptedException, IOException;

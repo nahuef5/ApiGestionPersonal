@@ -6,7 +6,6 @@ import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
-
 @Entity
 @Table(name="personal_empresa")
 @Getter
@@ -24,6 +23,7 @@ public class Staff{
     @NotNull
     private String surname;
     @Transient
+    @JsonIgnore
     private Address address;
     @NotNull
     private String addressCoordinates;
@@ -31,22 +31,22 @@ public class Staff{
     private int dni;
     @NotNull
     private LocalDate born;
-
+//Area
     @NotNull
     @ManyToOne
     @JoinColumn(name="id_area")
     @JsonIgnore
     private Area area;
-    
+//Position
     @NotNull
     @ManyToOne
     @JoinColumn(name="id_position")
     @JsonIgnore
     private Position position;
-    
     @NotNull
     private LocalDate contractStart;
-    @NotNull
+    @Transient
+    @JsonIgnore
     private String email;
     @NotNull
     private double basicSalary;
@@ -54,19 +54,7 @@ public class Staff{
     private double grossSalary;
     @NotNull
     private double netSalary;
- 
-    @JsonProperty("positionName")
-    public String getPositionName(){
-        if (position !=null)
-            return position.getPosition().name();
-        return null;
-    }
-    @JsonProperty("areaName")
-    public String getAreaName(){
-        if (area !=null)
-            return area.getArea().name();
-        return null;
-    }
+
     public Staff(String name, String surname, Address address, int dni, LocalDate born, Area area, Position position, LocalDate contractStart, String email) {
         this.name = name;
         this.surname = surname;

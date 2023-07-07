@@ -142,7 +142,7 @@ public class MailService{
         String subStringID = staff.getId_staff().substring(2, 10);
         String password=
                 staff.getName()+"_"+
-                staff.getAreaName()+"_"+
+                staff.getArea().getArea().name()+"_"+
                 subStringID;
         
         dto.setMailFrom(mailFrom);
