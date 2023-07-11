@@ -149,14 +149,14 @@ public class AreaServiceImpl implements AreaServiceInterface{
         Position position= returnPosition(id_position);
         
         Staff staff= new Staff(
+                area,
+                position,
+                dto.getContractStart(),
                 dto.getName(),
                 dto.getSurname(),
                 dto.getAddress(),
                 dto.getDni(),
                 dto.getBorn(),
-                area,
-                position,
-                dto.getContractStart(),
                 dto.getEmail());
         //asignamos las coordenadas del objeto direccion del staff y guardamos en ddbb
         staff.setAddressCoordinates(googleMapsServices.getCoordinates(dto.getAddress()).toString());
@@ -247,14 +247,14 @@ public class AreaServiceImpl implements AreaServiceInterface{
         Position position= returnPosition(id_position);
 
         Staff staff= new Staff(
+                area,
+                position,
+                dto.getContractStart(),
                 dto.getName(),
                 dto.getSurname(),
                 dto.getAddress(),
                 dto.getDni(),
                 dto.getBorn(),
-                area,
-                position,
-                dto.getContractStart(),
                 dto.getEmail());
         staff.setAddressCoordinates(googleMapsServices.getCoordinates(dto.getAddress()).toString());
         staffRepository.save(staff);

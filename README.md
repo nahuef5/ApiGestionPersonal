@@ -2,15 +2,18 @@
 
 <h2 align="center">Diagrama de clases con UML y Api elaborada con Spring boot</h2>
 <div class="container">
-<h6>Api que permite la gestión del personal de una empresa. Actualiza sueldo básico, bruto y neto en función de recargos y aportes(la antiguedad del staff se toma desde una diferencia entre la fecha de contrato y la actual).
- Crea, actualiza y elimina (luego de confirmar mediante una url de redireccionamiento) un personal. Areas y Puestos 
- se crean con la primera ejecución ya que provienen de clases enum. Implementa el olvido de contraseña y el refresh token. 
- Crea un usuario a la hora de crear un staff, excepto que pertenezca al area RRHH o EJECUTIVO y se envia un mail dando la bienvenida a la empresa al personal con el username y password para que ingrese con esas credenciales. El staff solo puede ver su informacion, pero no la de otros staff a excepcion del rol ADMINTRAINEE. El area se muestra desed un dto el cual muestra id, nombre, total de staff que lo conforman, total de sueldo basico por area, y total de sueldo bruto. Documentación con swagger.
- Consumo de google maps para guardar la direccion por coordenadas del staff en la base de datos.
+<h6>
+    API que permite la gestión del personal de una empresa. Actualiza el sueldo básico, bruto y neto en función de recargos y aportes (la antigüedad del personal se calcula a partir de la diferencia entre la fecha de contratación y la fecha actual).
+    Crea, actualiza y elimina personal (después de confirmar mediante una URL de redireccionamiento). Las áreas y los puestos se crean automáticamente en la primera ejecución, ya que provienen de clases enumeradas (enum). Implementa la función de olvido de contraseña y el token de actualización (refresh token).
+    Se crea un usuario al crear un nuevo personal, a menos que pertenezca al área de RRHH o Ejecutivo. En ese caso, se envía un correo electrónico de bienvenida al personal con el nombre de usuario y la contraseña para que puedan iniciar sesión con esas credenciales.
+    El personal solo puede ver su propia información, pero el rol de ADMINTRAINEE puede ver la información de otros miembros del personal. El área se muestra a través de un DTO (objeto de transferencia de datos) que muestra el ID, el nombre, el total de personal en el área, el total del sueldo básico por área y el total del sueldo bruto. La documentación se realiza con Swagger.
+    Se utiliza la API de Google Maps para almacenar la dirección del personal en la base de datos a través de coordenadas.
 </h6>
 </div>
 
 - API Rest
+
+- Herencia
 
 - MySql
 
@@ -34,11 +37,6 @@
 
 - API Google Maps
 
-<h3 align="left">Proximas implementaciones y mejoras:</h3>
-
-<p>Mejorar métodos creación puestos ejecutivos, 
- mejorar abstracción de clases</p>
-
 <h3 align="left">Orden de ramas (según se implementan las mejoras):</h3>
 
 - [Position](#Position)
@@ -53,3 +51,4 @@
 - [Fechas](#Fechas)
 - [Swagger](#Swagger)
 - [GoogleMaps](#GoogleMaps)
+- [Mejoras](#Mejoras)
