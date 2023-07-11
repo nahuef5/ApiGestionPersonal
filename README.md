@@ -8,7 +8,7 @@ API que permite la gestión del personal de una empresa. Actualiza el sueldo bá
     Se crea un usuario al crear un nuevo personal, a menos que pertenezca al área de RRHH o Ejecutivo. En caso de no ser parte de las áreas mencionadas, se envía un email de bienvenida al personal con el nombre de usuario y la contraseña para que puedan iniciar sesión con esas credenciales.
     El personal solo puede ver su propia información, pero el rol de ADMINTRAINEE puede ver la información de otros miembros del personal.
     El área cuenta con una bonificación que se suma al sueldo del personal. Además, se muestra a través de un DTO  que muestra el ID, el nombre, el total de personal en el área, el total del sueldo básico por área y el total del sueldo bruto.
-    La documentación se realiza con Swagger.
+    Utilizacion de herramienta Swagger.
 Se utiliza la API de Google Maps para almacenar la dirección del personal en la base de datos a través de coordenadas.
 </h6>
 </div>
