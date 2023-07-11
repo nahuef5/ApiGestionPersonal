@@ -9,7 +9,7 @@ API que permite la gestión del personal de una empresa. Actualiza el sueldo bá
     El personal solo puede ver su propia información, pero el rol de ADMINTRAINEE puede ver la información de otros miembros del personal.
     El área cuenta con una bonificación que se suma al sueldo del personal. Además, se muestra a través de un DTO  que muestra el ID, el nombre, el total de personal en el área, el total del sueldo básico por área y el total del sueldo bruto.
     La documentación se realiza con Swagger.
-    Se utiliza la API de Google Maps para almacenar la dirección del personal en la base de datos a través de coordenadas.
+Se utiliza la API de Google Maps para almacenar la dirección del personal en la base de datos a través de coordenadas.
 </h6>
 </div>
 
